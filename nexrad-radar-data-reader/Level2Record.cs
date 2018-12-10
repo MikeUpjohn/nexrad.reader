@@ -33,9 +33,44 @@ namespace nexrad_radar_data_reader
                 SegmentNumber = rad.ReadShort(),
             };
 
-            if(message.MessageType == 31)
+            if (message.MessageType == 31)
             {
-                message.
+                RecordMessageRecord rmr = new RecordMessageRecord()
+                {
+                    Id = rad.ReadString(4),
+                    MSeconds = rad.ReadInteger(),
+                    JulianDate = rad.ReadShort(),
+                    RadialNumber = rad.ReadShort(),
+                    Azimuth = rad.ReadFloat(),
+                    CompressIdx = rad.ReadByte(),
+                    Sp = rad.ReadByte(),
+                    RadialLength = rad.ReadShort(),
+                    ARS = rad.ReadByte(),
+                    RS = rad.ReadByte(),
+                    ElevationNumber = rad.ReadByte(),
+                    Cut = rad.ReadByte(),
+                    Elevation = rad.ReadFloat(),
+                    RSBS = rad.ReadByte(),
+                    AIM = rad.ReadByte(),
+                    DCount = rad.ReadShort(),
+                };
+
+                message.Record = rmr;
+
+                RecordMessageRecordDataBlock rmrdb = new RecordMessageRecordDataBlock()
+                {
+                    DBP1 = rad.ReadInteger(),
+                    DBP2 = rad.ReadInteger(),
+                    DBP3 = rad.ReadInteger(),
+                    DBP4 = rad.ReadInteger(),
+                    DBP5 = rad.ReadInteger(),
+                    DBP6 = rad.ReadInteger(),
+                    DBP7 = rad.ReadInteger(),
+                    DBP8 = rad.ReadInteger(),
+                    DBP9 = rad.ReadInteger(),
+                };
+
+                message.Record.DataBlocks = rmrdb;
             }
 
             return message;

@@ -100,7 +100,7 @@ namespace nexrad_radar_data_reader
 
             offset += countToRead;
 
-            return BitConverter.ToString(data, 0);
+            return System.Text.Encoding.UTF8.GetString(data);
         }
 
         public byte[] Read(int countToRead)
