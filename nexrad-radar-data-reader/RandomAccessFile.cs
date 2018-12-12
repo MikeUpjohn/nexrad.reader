@@ -27,6 +27,11 @@ namespace nexrad_radar_data_reader
             isBigEndian = (endian == Settings.BIG_ENDIAN);
         }
 
+        internal void Seek(object p)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Skip(int skip)
         {
             offset += skip;

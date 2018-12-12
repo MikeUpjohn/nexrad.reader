@@ -42,9 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataParser.cs" />
+    <Compile Include="Level2Parser.cs" />
     <Compile Include="Level2Radar.cs" />
     <Compile Include="Level2Record.cs" />
+    <Compile Include="Models\ElevationData.cs" />
+    <Compile Include="Models\MomentData.cs" />
+    <Compile Include="Models\RadialData.cs" />
     <Compile Include="Models\RecordMessage.cs" />
+    <Compile Include="Models\VolumeData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomAccessFile.cs" />

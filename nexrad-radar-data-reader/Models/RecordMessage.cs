@@ -31,19 +31,23 @@
         public byte RSBS { get; set; }
         public byte AIM { get; set; }
         public short DCount { get; set; }
-        public RecordMessageRecordDataBlock DataBlocks { get; set; }
+        //public RecordMessageRecordDataBlock DataBlocks { get; set; }
+        public VolumeData VolumeData { get; set; }
+        public ElevationData ElevationData { get; set; }
+        public MomentData ReflectivityData { get; set; }
+        public RadialData RadialData { get; internal set; }
     }
 
-    public class RecordMessageRecordDataBlock
-    {
-        public int DBP1 { get; set; }
-        public int DBP2 { get; set; }
-        public int DBP3 { get; set; }
-        public int DBP4 { get; set; }
-        public int DBP5 { get; set; }
-        public int DBP6 { get; set; }
-        public int DBP7 { get; set; }
-        public int DBP8 { get; set; }
-        public int DBP9 { get; set; }
-    }
+    //public class RecordMessageRecordDataBlock
+    //{
+    //    public int DBP1 { get; set; }
+    //    public int DBP2 { get; set; }
+    //    public int DBP3 { get; set; }
+    //    public int DBP4 { get; set; }
+    //    public int DBP5 { get; set; }
+    //    public int DBP6 { get; set; }
+    //    public int DBP7 { get; set; }
+    //    public int DBP8 { get; set; }
+    //    public int DBP9 { get; set; }
+    //}
 }
