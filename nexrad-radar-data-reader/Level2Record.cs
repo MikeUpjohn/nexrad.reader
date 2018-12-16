@@ -77,6 +77,11 @@ namespace nexrad_radar_data_reader
                 ParseElevationData(rad, rmr, DBP2);
                 ParseRadialData(rad, rmr, DBP3);
                 ParseMomentData(rad, rmr, DBP4, "REF");
+                ParseMomentData(rad, rmr, DBP5, "VEL");
+                ParseMomentData(rad, rmr, DBP6, "SW");
+                ParseMomentData(rad, rmr, DBP7, "ZDR");
+                ParseMomentData(rad, rmr, DBP8, "PHI");
+                ParseMomentData(rad, rmr, DBP9, "RHO");
 
                 message.Record = rmr;
             }
@@ -168,6 +173,53 @@ namespace nexrad_radar_data_reader
                     data.MomentDataValues = new float[reflectivityData.Count];
                     data.MomentDataValues = reflectivityData.ToArray();
                     rmr.ReflectivityData = data;
+                    break;
+                case "VEL":
+                    var velocityData = new List<float>();
+                    for(int i = 28; i <= 1227; i++)
+                    {
+                        velocityData.Add((parser.GetDataBlockByte(i) - data.Offset) / data.Scale);
+                    }
+
+                    data.MomentDataValues = new float[velocityData.Count];
+                    data.MomentDataValues = velocityData.ToArray();
+                    rmr.VelocityData = data;
+                    break;
+                case "SW":
+                    var swData = new List<float>();
+                    for(int i = 28; i <= 1227; i++)
+                    {
+                        swData.Add((parser.GetDataBlockByte(i) - data.Offset) / data.Scale);
+                    }
+
+                    data.MomentDataValues = new float[swData.Count];
+                    data.MomentDataValues = swData.ToArray();
+                    rmr.SpectrumData = data;
+                    break;
+                case "ZDR":
+                    var zdrData = new List<float>();
+                    for(int i = 28; i <= 1227; i++)
+                    {
+                        zdrData.Add((parser.GetDataBlockByte(i) - data.Offset) / data.Scale);
+                    }
+
+                    data.MomentDataValues = new float[zdrData.Count];
+                    data.MomentDataValues = zdrData.ToArray();
+                    rmr.SpectrumData = data;
+                    break;
+                case "PHI":
+                    // coming soon...
+                    break;
+                case "RHO":
+                    var rhoData = new List<float>();
+                    for(int i = 28; i <= 1227; i++)
+                    {
+                        rhoData.Add((parser.GetDataBlockByte(i) - data.Offset) / data.Scale);
+                    }
+
+                    data.MomentDataValues = new float[rhoData.Count];
+                    data.MomentDataValues = rhoData.ToArray();
+                    rmr.RhoData = data;
                     break;
             }
         }

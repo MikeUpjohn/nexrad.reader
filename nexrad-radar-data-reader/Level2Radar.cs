@@ -29,6 +29,10 @@ namespace nexrad_radar_data_reader
             while (true && !endOfFile)
             {
                 var x = new Level2Record(raf, recordNo++, messageOffset31);
+
+                var recordOffset = recordNo * Settings.RADAR_DATA_SIZE + Settings.FILE_HEADER_SIZE + messageOffset31;
+                if (recordOffset >= raf.GetLength()) break;
+
                 var message = x.GetRecord(raf);
 
                 if (message != null)
