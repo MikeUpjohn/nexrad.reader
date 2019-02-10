@@ -68,9 +68,7 @@ namespace nexrad_radar_data_reader
             }
 
             var oute = GroupAndSortData(momentData);
-
-            var interestingstuff = data.Where(x => x.MessageType == 31).ToList();
-
+            
             watch.Stop();
 
             var a = watch.ElapsedMilliseconds;
