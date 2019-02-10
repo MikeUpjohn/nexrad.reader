@@ -47,6 +47,7 @@
     <Compile Include="Level2Radar.cs" />
     <Compile Include="Level2Record.cs" />
     <Compile Include="Models\ElevationData.cs" />
+    <Compile Include="Models\GroupedMomentData.cs" />
     <Compile Include="Models\MomentData.cs" />
     <Compile Include="Models\RadialData.cs" />
     <Compile Include="Models\RecordMessage.cs" />

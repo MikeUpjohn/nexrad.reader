@@ -205,7 +205,7 @@ namespace nexrad_radar_data_reader
 
                     data.MomentDataValues = new float[zdrData.Count];
                     data.MomentDataValues = zdrData.ToArray();
-                    rmr.SpectrumData = data;
+                    rmr.ZDRData = data;
                     break;
                 case "PHI":
                     // coming soon...

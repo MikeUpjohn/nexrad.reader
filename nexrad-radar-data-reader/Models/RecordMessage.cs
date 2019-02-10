@@ -34,11 +34,13 @@
         //public RecordMessageRecordDataBlock DataBlocks { get; set; }
         public VolumeData VolumeData { get; set; }
         public ElevationData ElevationData { get; set; }
-        public MomentData ReflectivityData { get; set; }
         public RadialData RadialData { get; set; }
+        public MomentData ReflectivityData { get; set; }
         public MomentData VelocityData { get; set; }
-        public MomentData SpectrumData { get; internal set; }
-        public MomentData RhoData { get; internal set; }
+        public MomentData SpectrumData { get; set; }
+        public MomentData ZDRData { get; set; }
+        public MomentData PHIData { get; set; }
+        public MomentData RhoData { get; set; }
     }
 
     //public class RecordMessageRecordDataBlock

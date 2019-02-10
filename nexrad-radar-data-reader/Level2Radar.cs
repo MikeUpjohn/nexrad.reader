@@ -1,5 +1,7 @@
 ﻿using nexrad_radar_data_reader.Models;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace nexrad_radar_data_reader
@@ -16,6 +18,9 @@ namespace nexrad_radar_data_reader
 
         private void ParseRadarData(string fileName)
         {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
             var raf = new RandomAccessFile(fileName);
             var data = new List<RecordMessage>();
 
@@ -25,6 +30,7 @@ namespace nexrad_radar_data_reader
             int messageOffset31 = 0;
             int recordNo = 0;
             bool endOfFile = false;
+            List<RecordMessage> momentData = new List<RecordMessage>();
 
             while (true && !endOfFile)
             {
@@ -49,11 +55,52 @@ namespace nexrad_radar_data_reader
                     endOfFile = true;
                 }
 
-                //if (message.MessageType != 1 && message.MessageType != 31) continue;
+                if (message.MessageType != 1 && message.MessageType != 31) continue;
+
+                int av = 1;
+
+                if (message.Record.ReflectivityData != null) momentData.Add(message);
+                if (message.Record.VelocityData != null) momentData.Add(message);
+                if (message.Record.SpectrumData != null) momentData.Add(message);
+                if (message.Record.ZDRData != null) momentData.Add(message);
+                if (message.Record.PHIData != null) momentData.Add(message);
+                if (message.Record.RhoData != null) momentData.Add(message);
             }
+
+            var oute = GroupAndSortData(momentData);
+
             var interestingstuff = data.Where(x => x.MessageType == 31).ToList();
 
-            int a = 1;
+            watch.Stop();
+
+            var a = watch.ElapsedMilliseconds;
+        }
+
+        private List<GroupedMomentData> GroupAndSortData(List<RecordMessage> momentData)
+        {
+            var groups = new List<GroupedMomentData>();
+
+            foreach (var item in momentData)
+            {
+                var elevationNumber = item.Record.ElevationNumber;
+
+                var group = groups.SingleOrDefault(x => x.ElevationNumber == elevationNumber);
+
+                if(group == null)
+                {
+                    group = new GroupedMomentData() { ElevationNumber = elevationNumber };
+                    group.RecordMessages.Add(item);
+
+                    groups.Add(group);
+                }
+                else
+                {
+                    groups.Where(x => x.ElevationNumber == elevationNumber).SingleOrDefault().RecordMessages.Add(item);
+                }
+            }
+
+            // Just to make sure.
+            return groups.OrderBy(x=>x.ElevationNumber).ToList();
         }
     }
 }
