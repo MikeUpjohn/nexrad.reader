@@ -10,7 +10,7 @@ namespace nexrad_radar_data_reader
     {
         static void Main(string[] args)
         {
-            new Level2Radar("F:\\TempDev\\nexrad-radar-data-reader\\nexrad-radar-data-reader\\KTLX20130420_205120_V06");
+            new Level2Radar("F:\\TempDev\\nexrad-radar-data-reader\\nexrad-radar-data-reader\\KAKQ20110504_000344_V03");
         }
     }
 }

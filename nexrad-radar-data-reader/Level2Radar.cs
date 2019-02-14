@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json;
-using nexrad.models;
-using nexrad_radar_data_reader.Models;
+﻿using nexrad_radar_data_reader.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace nexrad_radar_data_reader
@@ -60,6 +57,8 @@ namespace nexrad_radar_data_reader
 
                 if (message.MessageType != 1 && message.MessageType != 31) continue;
 
+                int av = 1;
+
                 if (message.Record.ReflectivityData != null) momentData.Add(message);
                 if (message.Record.VelocityData != null) momentData.Add(message);
                 if (message.Record.SpectrumData != null) momentData.Add(message);
@@ -69,11 +68,7 @@ namespace nexrad_radar_data_reader
             }
 
             var oute = GroupAndSortData(momentData);
-
-            var result = JsonConvert.SerializeObject(oute.First().RecordMessages.First());
-
-            File.WriteAllText("F:/NOAA Radar Decoder/my-example.json", result);
-
+            
             watch.Stop();
 
             var a = watch.ElapsedMilliseconds;
@@ -89,7 +84,7 @@ namespace nexrad_radar_data_reader
 
                 var group = groups.SingleOrDefault(x => x.ElevationNumber == elevationNumber);
 
-                if (group == null)
+                if(group == null)
                 {
                     group = new GroupedMomentData() { ElevationNumber = elevationNumber };
                     group.RecordMessages.Add(item);
@@ -103,7 +98,7 @@ namespace nexrad_radar_data_reader
             }
 
             // Just to make sure.
-            return groups.OrderBy(x => x.ElevationNumber).ToList();
+            return groups.OrderBy(x=>x.ElevationNumber).ToList();
         }
     }
 }
