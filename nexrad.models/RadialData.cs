@@ -1,4 +1,4 @@
-﻿namespace nexrad_radar_data_reader.Models
+﻿namespace nexrad.models
 {
     public class RadialData
     {
