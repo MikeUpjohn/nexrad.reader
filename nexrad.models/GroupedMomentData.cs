@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace nexrad_radar_data_reader.Models
+namespace nexrad.models
 {
     public class GroupedMomentData
     {
