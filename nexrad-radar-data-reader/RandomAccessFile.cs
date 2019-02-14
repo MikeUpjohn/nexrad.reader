@@ -9,6 +9,7 @@ namespace nexrad_radar_data_reader
         public int offset = 0;
         public byte[] buffer = null;
         public bool isBigEndian = false;
+        public int testcount = 0;
 
         public RandomAccessFile(string file)
         {
@@ -74,12 +75,20 @@ namespace nexrad_radar_data_reader
 
         public byte ReadByte()
         {
-            byte[] data = new byte[1];
-            Buffer.BlockCopy(buffer, offset, data, 0, 1);
+            try
+            {
+                byte[] data = new byte[1];
+                Buffer.BlockCopy(buffer, offset, data, 0, 1);
 
-            offset++;
+                offset++;
 
-            return data.First();
+                return data.First();
+            }
+            catch
+            {
+                testcount++;
+                return 1;
+            }
         }
 
         public float ReadFloat()
