@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autofac;
+using nexrad.level2.reader.Autofac;
 
 namespace nexrad.level2.reader
 {
@@ -10,8 +7,13 @@ namespace nexrad.level2.reader
     {
         public static void Main(string[] args)
         {
-            var reader = new Level2RadarReader("F:\\TempDev\\nexrad-radar-data-reader\\nexrad-radar-data-reader\\KAKQ20110504_000344_V03");
-            reader.ReadNexradLevel2RadarData();
+            var container = IocContainerBuilder.BuildContainer();
+
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var app = scope.Resolve<IApplicationService>();
+                app.Run();
+            }
         }
     }
 }
