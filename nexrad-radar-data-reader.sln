@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad-radar-data-reader", "nexrad-radar-data-reader\nexrad-radar-data-reader.csproj", "{E634DD11-77DD-4545-A0B6-22AF7C2AC1E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad.models", "nexrad.models\nexrad.models.csproj", "{7A53ABC0-20B1-4BD2-81F5-159D32040F90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad.level2.reader", "nexrad.level2.reader\nexrad.level2.reader.csproj", "{8E6201B8-E342-473A-84A8-48CCA02D420A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{E634DD11-77DD-4545-A0B6-22AF7C2AC1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E634DD11-77DD-4545-A0B6-22AF7C2AC1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E634DD11-77DD-4545-A0B6-22AF7C2AC1E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A53ABC0-20B1-4BD2-81F5-159D32040F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A53ABC0-20B1-4BD2-81F5-159D32040F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A53ABC0-20B1-4BD2-81F5-159D32040F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A53ABC0-20B1-4BD2-81F5-159D32040F90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E6201B8-E342-473A-84A8-48CCA02D420A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E6201B8-E342-473A-84A8-48CCA02D420A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E6201B8-E342-473A-84A8-48CCA02D420A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E6201B8-E342-473A-84A8-48CCA02D420A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,4 @@
 ﻿using nexrad.models;
-using nexrad_radar_data_reader.Models;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;

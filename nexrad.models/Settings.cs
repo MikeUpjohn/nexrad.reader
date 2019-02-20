@@ -1,4 +1,4 @@
-﻿namespace nexrad_radar_data_reader
+﻿namespace nexrad.models
 {
     public static class Settings
     {

@@ -1,6 +1,4 @@
 ﻿using nexrad.models;
-using nexrad_radar_data_reader.Models;
-using System;
 using System.Collections.Generic;
 
 namespace nexrad_radar_data_reader
@@ -34,6 +32,8 @@ namespace nexrad_radar_data_reader
                 SegmentCount = rad.ReadShort(),
                 SegmentNumber = rad.ReadShort(),
             };
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(message);
 
             if (message.MessageType == 31)
             {
@@ -110,6 +110,8 @@ namespace nexrad_radar_data_reader
                 DifferentialReflectivity = parser.GetDataBlockFloat(32),
                 VolumeCoveragePattern = parser.GetDataBlockByte(40),
             };
+
+            var result = Newtonsoft.Json.JsonConvert.SerializeObject(data);
 
             rmr.VolumeData = data;
         }

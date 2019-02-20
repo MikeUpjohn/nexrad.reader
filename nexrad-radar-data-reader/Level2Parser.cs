@@ -1,4 +1,5 @@
-﻿using System;
+﻿using nexrad.models;
+using System;
 
 namespace nexrad_radar_data_reader
 {
