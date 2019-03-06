@@ -46,6 +46,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadialData.cs" />
     <Compile Include="RecordMessage.cs" />
+    <Compile Include="RecordMessageRecordDataBlock.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="VolumeData.cs" />
   </ItemGroup>

@@ -1,8 +1,8 @@
-﻿namespace nexrad.level2.reader.Level2
+﻿namespace nexrad.reader.Level2
 {
     public interface ILevel2RadarReader
     {
-        void ReadLevel2RadarFile(string fileName);
+        void RunLevel2Radar(string fileName);
         // Call off to read Level 3 Radar File here, eventually
     }
 }

@@ -1,11 +1,11 @@
 ﻿using nexrad.models;
+using System.Collections.Generic;
 
-namespace nexrad.level2.reader.Level2
+namespace nexrad.reader.Level2
 {
     public interface ILevel2RecordReader
     {
         void LoadFile(string fileName);
-        void SkipHeader();
-        RecordMessage ReadMessageHeader();
+        IList<RecordMessage> Read();
     }
 }

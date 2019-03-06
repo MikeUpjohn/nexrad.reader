@@ -7,8 +7,8 @@
     <ProjectGuid>{8E6201B8-E342-473A-84A8-48CCA02D420A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>nexrad.level2.reader</RootNamespace>
-    <AssemblyName>nexrad.level2.reader</AssemblyName>
+    <RootNamespace>nexrad.reader</RootNamespace>
+    <AssemblyName>nexrad.reader</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -57,10 +57,16 @@
     <Compile Include="IApplicationService.cs" />
     <Compile Include="Level2\ByteReader.cs" />
     <Compile Include="Level2\IByteReader.cs" />
+    <Compile Include="Level2\ILevel2MessageReader.cs" />
     <Compile Include="Level2\ILevel2RecordReader.cs" />
     <Compile Include="Level2\ILevel2RadarReader.cs" />
+    <Compile Include="Level2\IndividualMessages\IMessage31Reader.cs" />
+    <Compile Include="Level2\IndividualMessages\IMessageHeaderReader.cs" />
+    <Compile Include="Level2\Level2MessageReader.cs" />
     <Compile Include="Level2\Level2RadarReader.cs" />
     <Compile Include="Level2\Level2RecordReader.cs" />
+    <Compile Include="Level2\IndividualMessages\Message31Reader.cs" />
+    <Compile Include="Level2\IndividualMessages\MessageHeaderReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

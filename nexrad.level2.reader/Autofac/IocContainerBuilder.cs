@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Autofac;
 
-namespace nexrad.level2.reader.Autofac
+namespace nexrad.reader.Autofac
 {
     public static class IocContainerBuilder
     {

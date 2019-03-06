@@ -1,7 +1,7 @@
 ﻿using Autofac;
-using nexrad.level2.reader.Autofac;
+using nexrad.reader.Autofac;
 
-namespace nexrad.level2.reader
+namespace nexrad.reader
 {
     public class Program
     {

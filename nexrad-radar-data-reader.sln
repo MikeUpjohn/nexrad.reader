@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad-radar-data-reader", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad.models", "nexrad.models\nexrad.models.csproj", "{7A53ABC0-20B1-4BD2-81F5-159D32040F90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad.level2.reader", "nexrad.level2.reader\nexrad.level2.reader.csproj", "{8E6201B8-E342-473A-84A8-48CCA02D420A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad.reader", "nexrad.level2.reader\nexrad.reader.csproj", "{8E6201B8-E342-473A-84A8-48CCA02D420A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

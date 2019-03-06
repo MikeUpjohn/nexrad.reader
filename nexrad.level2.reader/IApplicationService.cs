@@ -1,4 +1,4 @@
-﻿namespace nexrad.level2.reader
+﻿namespace nexrad.reader
 {
     public interface IApplicationService
     {
