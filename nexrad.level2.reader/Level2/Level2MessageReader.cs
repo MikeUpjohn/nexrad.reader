@@ -55,8 +55,7 @@ namespace nexrad.reader.Level2
                     var spectrumWidthData = _message31Reader.ParseSpectrumWidthMomentData(fileData, momentData.Offset, momentData.Scale);
                     var differentialReflectivityData = _message31Reader.ParseDifferentialReflectivityMomentData(fileData, momentData.Offset, momentData.Scale);
                     var differentialPhaseData = _message31Reader.ParseDifferentialPhaseMomentData(fileData, momentData.Offset, momentData.Scale);
-
-                    message.Record.ref
+                    
 
                     #endregion
 
