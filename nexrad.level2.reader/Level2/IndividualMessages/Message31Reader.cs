@@ -30,7 +30,7 @@ namespace nexrad.reader.Level2.IndividualMessages
                 RS = _byteReader.ReadByte(fileData),
                 ElevationNumber = _byteReader.ReadByte(fileData),
                 Cut = _byteReader.ReadByte(fileData),
-                Elevation = _byteReader.ReadByte(fileData),
+                Elevation = _byteReader.ReadFloat(fileData),
                 RSBS = _byteReader.ReadByte(fileData),
                 AIM = _byteReader.ReadByte(fileData),
                 DCount = _byteReader.ReadShort(fileData),
@@ -54,6 +54,162 @@ namespace nexrad.reader.Level2.IndividualMessages
             };
 
             return dataBlockPointers;
+        }
+
+        public VolumeData ParseVolumeData(byte[] fileData)
+        {
+            var data = new VolumeData()
+            {
+                BlockType = _byteReader.ReadString(fileData, 1),
+                Name = _byteReader.ReadString(fileData, 3),
+                Size = _byteReader.ReadShort(fileData),
+                VersionMajor = _byteReader.ReadByte(fileData),
+                VersionMinor = _byteReader.ReadByte(fileData),
+                Latitude = _byteReader.ReadFloat(fileData),
+                Longitude = _byteReader.ReadFloat(fileData),
+                Elevation = _byteReader.ReadShort(fileData),
+                FeedhornHeight = _byteReader.ReadByte(fileData),
+                Calibration = _byteReader.ReadFloat(fileData),
+                TxHorizontal = _byteReader.ReadFloat(fileData),
+                TxVertical = _byteReader.ReadFloat(fileData),
+                DifferentialReflectivity = _byteReader.ReadFloat(fileData),
+                InitialSystemDifferentialPhase = _byteReader.ReadFloat(fileData),
+                VolumeCoveragePattern = _byteReader.ReadByte(fileData),
+            };
+
+            _byteReader.Skip(2);
+
+            return data;
+        }
+
+        public ElevationData ParseElevationData(byte[] fileData)
+        {
+            var elevationData = new ElevationData()
+            {
+                BlockType = _byteReader.ReadString(fileData, 1),
+                Name = _byteReader.ReadString(fileData, 3),
+                Size = _byteReader.ReadShort(fileData),
+                Atmos = _byteReader.ReadShort(fileData),
+                Calibration = _byteReader.ReadFloat(fileData),
+            };
+
+            return elevationData;
+        }
+
+        public RadialData ParseRadialData(byte[] fileData)
+        {
+            var radialData = new RadialData()
+            {
+                BlockType = _byteReader.ReadString(fileData, 1),
+                Name = _byteReader.ReadString(fileData, 3),
+                Size = _byteReader.ReadShort(fileData),
+                UmambiguousRange = _byteReader.ReadShort(fileData),
+                HorizontalNoiseLevel = _byteReader.ReadFloat(fileData),
+                VerticalNoiseLevel = _byteReader.ReadFloat(fileData),
+                NyquistVelocity = _byteReader.ReadShort(fileData),
+            };
+
+            _byteReader.Skip(2);
+
+            return radialData;
+        }
+
+        public MomentData ParseMomentData(byte[] fileData)
+        {
+            var data = new MomentData()
+            {
+                BlockType = _byteReader.ReadString(fileData, 1),
+                MomentName = _byteReader.ReadString(fileData, 3),
+                GateCount = _byteReader.ReadShort(fileData, 4),
+                FirstGate = (_byteReader.ReadShort(fileData) / 1000),
+                GateSize = (_byteReader.ReadShort(fileData) / 1000),
+                RfThreshold = (_byteReader.ReadShort(fileData) / 10),
+                SnrThreshold = (_byteReader.ReadShort(fileData) / 1000),
+                ControlFlags = _byteReader.ReadByte(fileData),
+                DataSize = _byteReader.ReadByte(fileData),
+                Scale = _byteReader.ReadFloat(fileData),
+                Offset = _byteReader.ReadFloat(fileData),
+            };
+
+            return data;
+        }
+
+        public float[] ParseReflectivityMomentData(byte[] fileData, float offset, float scale)
+        {
+            var reflectivityData = new List<float>();
+
+            for (var i = 28; i <= 1867; i++)
+            {
+                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
+                reflectivityData.Add(data);
+            }
+
+            return reflectivityData.ToArray();
+        }
+
+        public float[] ParseVelocityMomentData(byte[] fileData, float offset, float scale)
+        {
+            var velocityData = new List<float>();
+
+            for (var i = 28; i <= 1227; i++)
+            {
+                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
+                velocityData.Add(data);
+            }
+
+            return velocityData.ToArray();
+        }
+
+        public float[] ParseSpectrumWidthMomentData(byte[] fileData, float offset, float scale)
+        {
+            var spectrumWidthData = new List<float>();
+
+            for (var i = 28; i <= 1227; i++)
+            {
+                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
+                spectrumWidthData.Add(data);
+            }
+
+            return spectrumWidthData.ToArray();
+        }
+
+        public float[] ParseDifferentialReflectivityMomentData(byte[] fileData, float offset, float scale)
+        {
+            var differentialReflectivityData = new List<float>();
+
+            for (var i = 28; i <= 1227; i++)
+            {
+                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
+                differentialReflectivityData.Add(data);
+            }
+
+            return differentialReflectivityData.ToArray();
+        }
+
+        public float[] ParseDifferentialPhaseMomentData(byte[] fileData, float offset, float scale)
+        {
+            var differentialPhaseData = new List<float>();
+
+            for (var i = 28; i <= 1227; i++)
+            {
+                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
+                differentialPhaseData.Add(data);
+            }
+
+            return differentialPhaseData.ToArray();
+        }
+
+        public float[] ParseCorrelationCoefficientMomentData(byte[] fileData, float offset, float scale)
+        {
+            var correlationCoefficientData = new List<float>();
+
+            for (var i = 28; i <= 1227; i++)
+            {
+                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
+                correlationCoefficientData.Add(data);
+            }
+
+            return correlationCoefficientData.ToArray();
         }
     }
 }

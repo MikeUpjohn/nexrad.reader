@@ -7,8 +7,10 @@
 
         void Seek(int to);
         void Skip(int count);
+
         byte ReadByte(byte[] fileData);
         short ReadShort(byte[] fileData);
+        short ReadShort(byte[] fileData, int skip);
         int ReadInt(byte[] fileData);
         float ReadFloat(byte[] fileData);
         string ReadString(byte[] fileData, int length);
