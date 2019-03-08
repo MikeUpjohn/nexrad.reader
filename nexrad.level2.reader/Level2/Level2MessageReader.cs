@@ -51,19 +51,24 @@ namespace nexrad.reader.Level2
 
                     var reflectivityData = _message31Reader.ParseMomentData(fileData);
                     var reflectivityMomentData = _message31Reader.ParseReflectivityMomentData(fileData, reflectivityData.Offset, reflectivityData.Scale);
+                    reflectivityData.MomentDataValues = reflectivityMomentData;
 
                     var velocityData = _message31Reader.ParseMomentData(fileData);
                     var velocityMomentData = _message31Reader.ParseVelocityMomentData(fileData, velocityData.Offset, velocityData.Scale);
+                    velocityData.MomentDataValues = velocityMomentData;
 
                     var spectrumWidthData = _message31Reader.ParseMomentData(fileData);
-                    var spectrumWidthMomentDataData = _message31Reader.ParseSpectrumWidthMomentData(fileData, spectrumWidthData.Offset, spectrumWidthData.Scale);
+                    var spectrumWidthMomentData = _message31Reader.ParseSpectrumWidthMomentData(fileData, spectrumWidthData.Offset, spectrumWidthData.Scale);
+                    spectrumWidthData.MomentDataValues = spectrumWidthMomentData;
 
                     var differentialReflectivityData = _message31Reader.ParseMomentData(fileData);
                     var differentialReflectivityMomentData = _message31Reader.ParseDifferentialReflectivityMomentData(fileData, differentialReflectivityData.Offset, differentialReflectivityData.Scale);
+                    differentialReflectivityData.MomentDataValues = differentialReflectivityMomentData;
 
                     var differentialPhaseData = _message31Reader.ParseMomentData(fileData);
                     var differentialPhaseMomentData = _message31Reader.ParseDifferentialPhaseMomentData(fileData, differentialPhaseData.Offset, differentialPhaseData.Scale);
-
+                    differentialPhaseData.MomentDataValues = differentialPhaseMomentData;
+                    
                     #endregion
 
                     int ga = 1;
