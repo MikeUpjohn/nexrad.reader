@@ -49,13 +49,21 @@ namespace nexrad.reader.Level2
 
                     #region
 
-                    var momentData = _message31Reader.ParseMomentData(fileData);
-                    var reflectivityData = _message31Reader.ParseReflectivityMomentData(fileData, momentData.Offset, momentData.Scale);
-                    var velocityMomentData = _message31Reader.ParseVelocityMomentData(fileData, momentData.Offset, momentData.Scale);
-                    var spectrumWidthData = _message31Reader.ParseSpectrumWidthMomentData(fileData, momentData.Offset, momentData.Scale);
-                    var differentialReflectivityData = _message31Reader.ParseDifferentialReflectivityMomentData(fileData, momentData.Offset, momentData.Scale);
-                    var differentialPhaseData = _message31Reader.ParseDifferentialPhaseMomentData(fileData, momentData.Offset, momentData.Scale);
-                    
+                    var reflectivityData = _message31Reader.ParseMomentData(fileData);
+                    var reflectivityMomentData = _message31Reader.ParseReflectivityMomentData(fileData, reflectivityData.Offset, reflectivityData.Scale);
+
+                    var velocityData = _message31Reader.ParseMomentData(fileData);
+                    var velocityMomentData = _message31Reader.ParseVelocityMomentData(fileData, velocityData.Offset, velocityData.Scale);
+
+                    var spectrumWidthData = _message31Reader.ParseMomentData(fileData);
+                    var spectrumWidthMomentDataData = _message31Reader.ParseSpectrumWidthMomentData(fileData, spectrumWidthData.Offset, spectrumWidthData.Scale);
+
+                    var differentialReflectivityData = _message31Reader.ParseMomentData(fileData);
+                    var differentialReflectivityMomentData = _message31Reader.ParseDifferentialReflectivityMomentData(fileData, differentialReflectivityData.Offset, differentialReflectivityData.Scale);
+
+                    var differentialPhaseData = _message31Reader.ParseMomentData(fileData);
+                    var differentialPhaseMomentData = _message31Reader.ParseDifferentialPhaseMomentData(fileData, differentialPhaseData.Offset, differentialPhaseData.Scale);
+
 
                     #endregion
 
