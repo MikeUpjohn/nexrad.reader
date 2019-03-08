@@ -47,7 +47,7 @@ namespace nexrad.reader.Level2
                     message.Record.ElevationData = elevationData;
                     message.Record.RadialData = radialData;
 
-                    #region
+                    #region Getting Individual Moment Data - the cool bit...
 
                     var reflectivityData = _message31Reader.ParseMomentData(fileData);
                     var reflectivityMomentData = _message31Reader.ParseReflectivityMomentData(fileData, reflectivityData.Offset, reflectivityData.Scale);
@@ -63,7 +63,6 @@ namespace nexrad.reader.Level2
 
                     var differentialPhaseData = _message31Reader.ParseMomentData(fileData);
                     var differentialPhaseMomentData = _message31Reader.ParseDifferentialPhaseMomentData(fileData, differentialPhaseData.Offset, differentialPhaseData.Scale);
-
 
                     #endregion
 
