@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using nexrad.models;
 using nexrad.reader.Level2.IndividualMessages;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace nexrad.reader.Level2
 {
@@ -23,7 +25,7 @@ namespace nexrad.reader.Level2
             _byteReader.Seek(Settings.CTM_HEADER_SIZE);
         }
 
-        public void ReadRecord(byte[] fileData, int offset)
+        public RecordMessage ReadRecord(byte[] fileData, int offset)
         {
             _byteReader.Seek(offset);
             _byteReader.Skip(Settings.CTM_HEADER_SIZE);
@@ -33,6 +35,8 @@ namespace nexrad.reader.Level2
             switch (message.MessageType)
             {
                 case 31:
+                    List<RecordMessage> recordMessages = new List<RecordMessage>();
+
                     var messageRecord = _message31Reader.ReadMessage31(fileData);
                     message.Record = messageRecord;
 
@@ -68,17 +72,25 @@ namespace nexrad.reader.Level2
                     var differentialPhaseData = _message31Reader.ParseMomentData(fileData);
                     var differentialPhaseMomentData = _message31Reader.ParseDifferentialPhaseMomentData(fileData, differentialPhaseData.Offset, differentialPhaseData.Scale);
                     differentialPhaseData.MomentDataValues = differentialPhaseMomentData;
-                    
+
                     #endregion
 
-                    int ga = 1;
+                    message.Record.ReflectivityData = reflectivityData;
+                    message.Record.VelocityData = velocityData;
+                    message.Record.SpectrumData = spectrumWidthData;
+                    message.Record.ZDRData = differentialReflectivityData;
+                    // PHI data coming soon...
+                    message.Record.RhoData = differentialPhaseData;
 
                     break;
                 default:
                     break;
             }
+
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(message);
             int a = 1;
+
+            return message;
         }
     }
 }

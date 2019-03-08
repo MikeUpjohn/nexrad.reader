@@ -6,6 +6,6 @@ namespace nexrad.reader.Level2
     public interface ILevel2RecordReader
     {
         void LoadFile(string fileName);
-        IList<RecordMessage> Read();
+        IList<GroupedMomentData> Read();
     }
 }

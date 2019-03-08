@@ -30,6 +30,7 @@ namespace nexrad_radar_data_reader
             int recordNo = 0;
             bool endOfFile = false;
             List<RecordMessage> momentData = new List<RecordMessage>();
+            List<int> recordStatus = new List<int>();
 
             while (true && !endOfFile)
             {
@@ -39,6 +40,7 @@ namespace nexrad_radar_data_reader
                 if (recordOffset >= raf.GetLength()) break;
 
                 var message = x.GetRecord(raf);
+                recordStatus.Add(raf.offset);
 
                 if (message != null)
                 {
