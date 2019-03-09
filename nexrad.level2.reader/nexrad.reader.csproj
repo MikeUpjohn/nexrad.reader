@@ -56,7 +56,9 @@
     <Compile Include="Autofac\IocContainerBuilder.cs" />
     <Compile Include="IApplicationService.cs" />
     <Compile Include="Level2\ByteReader.cs" />
+    <Compile Include="Level2\DataLogger.cs" />
     <Compile Include="Level2\IByteReader.cs" />
+    <Compile Include="Level2\IDataLogger.cs" />
     <Compile Include="Level2\ILevel2MessageReader.cs" />
     <Compile Include="Level2\ILevel2RecordReader.cs" />
     <Compile Include="Level2\ILevel2RadarReader.cs" />

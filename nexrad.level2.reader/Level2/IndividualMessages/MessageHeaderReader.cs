@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Newtonsoft.Json;
 using nexrad.models;
 
 namespace nexrad.reader.Level2.IndividualMessages
@@ -7,10 +8,12 @@ namespace nexrad.reader.Level2.IndividualMessages
     public class MessageHeaderReader : IMessageHeaderReader
     {
         private readonly IByteReader _byteReader;
+        private readonly IDataLogger _dataLogger;
 
-        public MessageHeaderReader(IByteReader byteReader)
+        public MessageHeaderReader(IByteReader byteReader, IDataLogger dataLogger)
         {
             _byteReader = byteReader;
+            _dataLogger = dataLogger;
         }
 
         public RecordMessage ReadHeader(byte[] fileData)
@@ -26,6 +29,9 @@ namespace nexrad.reader.Level2.IndividualMessages
                 SegmentCount = _byteReader.ReadShort(fileData),
                 SegmentNumber = _byteReader.ReadShort(fileData),
             };
+
+            _dataLogger.Log("Location 1 - at byte location " + _byteReader.Offset);
+            _dataLogger.Log(JsonConvert.SerializeObject(record));
 
             return record;
         }
