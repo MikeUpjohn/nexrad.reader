@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Autofac;
+using Newtonsoft.Json;
 using nexrad.models;
 
 namespace nexrad.reader.Level2.IndividualMessages
@@ -8,10 +9,12 @@ namespace nexrad.reader.Level2.IndividualMessages
     public class Message31Reader : IMessage31Reader
     {
         private readonly IByteReader _byteReader;
+        private readonly IDataLogger _dataLogger;
 
-        public Message31Reader(IByteReader byteReader)
+        public Message31Reader(IByteReader byteReader, IDataLogger dataLogger)
         {
             _byteReader = byteReader;
+            _dataLogger = dataLogger;
         }
 
         public RecordMessageRecord ReadMessage31(byte[] fileData)
@@ -36,6 +39,9 @@ namespace nexrad.reader.Level2.IndividualMessages
                 DCount = _byteReader.ReadShort(fileData),
             };
 
+            _dataLogger.Log("Location 2 - End of RMR - at byte location " + _byteReader.Offset);
+            _dataLogger.Log(JsonConvert.SerializeObject(recordMessageRecord));
+
             return recordMessageRecord;
         }
         public RecordMessageRecordDataBlock ReadDataBlockPointers(byte[] fileData)
@@ -52,6 +58,9 @@ namespace nexrad.reader.Level2.IndividualMessages
                 DBP8 = _byteReader.ReadInt(fileData),
                 DBP9 = _byteReader.ReadInt(fileData),
             };
+
+            _dataLogger.Log("Location 3 - End of Data Block Pointers - at byte location " + _byteReader.Offset);
+            _dataLogger.Log(JsonConvert.SerializeObject(new List<int>() { dataBlockPointers.DBP1, dataBlockPointers.DBP2, dataBlockPointers.DBP3, dataBlockPointers.DBP4, dataBlockPointers.DBP5, dataBlockPointers.DBP6, dataBlockPointers.DBP7, dataBlockPointers.DBP8, dataBlockPointers.DBP9 }));
 
             return dataBlockPointers;
         }
@@ -77,7 +86,12 @@ namespace nexrad.reader.Level2.IndividualMessages
                 InitialSystemDifferentialPhase = _byteReader.ReadFloat(fileData),
                 VolumeCoveragePattern = _byteReader.ReadByte(fileData),
             };
-            
+
+            _byteReader.Skip(2);
+
+            _dataLogger.Log("Location 4 - End of Volume Data - at byte location - " + _byteReader.Offset);
+            _dataLogger.Log(JsonConvert.SerializeObject(data));
+
             return data;
         }
 
@@ -94,6 +108,9 @@ namespace nexrad.reader.Level2.IndividualMessages
                 Atmos = _byteReader.ReadShort(fileData),
                 Calibration = _byteReader.ReadFloat(fileData),
             };
+
+            _dataLogger.Log("Location 5 - End of Elevation Data - at byte location - " + _byteReader.Offset);
+            _dataLogger.Log(JsonConvert.SerializeObject(elevationData));
 
             return elevationData;
         }
@@ -112,6 +129,9 @@ namespace nexrad.reader.Level2.IndividualMessages
             };
 
             _byteReader.Skip(2);
+
+            _dataLogger.Log("Location 6 - End of Radial Data - at byte location - " + _byteReader.Offset);
+            _dataLogger.Log(JsonConvert.SerializeObject(radialData));
 
             return radialData;
         }
@@ -132,6 +152,9 @@ namespace nexrad.reader.Level2.IndividualMessages
                 Scale = _byteReader.ReadFloat(fileData),
                 Offset = _byteReader.ReadFloat(fileData),
             };
+
+            _dataLogger.Log("Location 7 - End of Moment Header Data, before switch - at byte location " + _byteReader.Offset);
+            _dataLogger.Log(JsonConvert.SerializeObject(data));
 
             return data;
         }

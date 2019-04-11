@@ -123,6 +123,5 @@ namespace nexrad.reader.Level2
 
             return System.Text.Encoding.UTF8.GetString(data);
         }
-
     }
 }
