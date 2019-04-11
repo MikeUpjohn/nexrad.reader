@@ -1,5 +1,6 @@
 ﻿using nexrad.models;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace nexrad_radar_data_reader
 {
@@ -33,7 +34,8 @@ namespace nexrad_radar_data_reader
                 SegmentNumber = rad.ReadShort(),
             };
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(message);
+            DataLogger.Log("Location 1 - at byte location " + rad.offset);
+            DataLogger.Log(JsonConvert.SerializeObject(message));
 
             if (message.MessageType == 31)
             {
@@ -57,6 +59,9 @@ namespace nexrad_radar_data_reader
                     DCount = rad.ReadShort(),
                 };
 
+                DataLogger.Log("Location 2 - End of RMR - at byte location " + rad.offset);
+                DataLogger.Log(JsonConvert.SerializeObject(rmr));
+
                 message.Record = rmr;
 
                 //RecordMessageRecordDataBlock rmrdb = new RecordMessageRecordDataBlock()
@@ -71,8 +76,13 @@ namespace nexrad_radar_data_reader
                 int DBP8 = rad.ReadInteger();
                 int DBP9 = rad.ReadInteger();
                 //};
+                if(rad.offset == 326008) { int dd = 1; }
+                DataLogger.Log("Location 3 - End of Data Block Pointers - at byte location " + rad.offset);
+                DataLogger.Log(JsonConvert.SerializeObject(new List<int>() { DBP1, DBP2, DBP3, DBP4, DBP5, DBP6, DBP7, DBP8, DBP9 }));
 
                 //message.Record.DataBlocks = rmrdb;
+
+                if(rad.offset == 325912) { int fds = 1; }
 
                 ParseVolumeData(rad, rmr, DBP1);
                 ParseElevationData(rad, rmr, DBP2);
@@ -85,6 +95,10 @@ namespace nexrad_radar_data_reader
                 ParseMomentData(rad, rmr, DBP9, "RHO");
 
                 message.Record = rmr;
+            }
+            else
+            {
+                DataLogger.Log("Location 8 - Not a Message31 message. Moving on to next message");
             }
 
             return message;
@@ -111,13 +125,15 @@ namespace nexrad_radar_data_reader
                 VolumeCoveragePattern = parser.GetDataBlockByte(40),
             };
 
-            var result = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            DataLogger.Log("Location 4 - End of Volume Data - at byte location - " + rad.offset);
+            DataLogger.Log(JsonConvert.SerializeObject(data));
 
             rmr.VolumeData = data;
         }
 
         public void ParseElevationData(RandomAccessFile rad, RecordMessageRecord rmr, int dbp)
         {
+            if (rad.offset == 326049) { int y = 1; }
             var parser = new Level2Parser(rad, dbp, recordOffset);
             var data = new ElevationData()
             {
@@ -127,6 +143,9 @@ namespace nexrad_radar_data_reader
                 Atmos = parser.GetDataBlockShort(6),
                 Calibration = parser.GetDataBlockFloat(8),
             };
+
+            DataLogger.Log("Location 5 - End of Elevation Data - at byte location - " + rad.offset);
+            DataLogger.Log(JsonConvert.SerializeObject(data));
 
             rmr.ElevationData = data;
         }
@@ -144,6 +163,9 @@ namespace nexrad_radar_data_reader
                 VerticalNoiseLevel = parser.GetDataBlockFloat(12),
                 NyquistVelocity = parser.GetDataBlockShort(16),
             };
+
+            DataLogger.Log("Location 6 - End of Radial Data - at byte location - " + rad.offset);
+            DataLogger.Log(JsonConvert.SerializeObject(data));
 
             rmr.RadialData = data;
         }
@@ -164,6 +186,9 @@ namespace nexrad_radar_data_reader
                 DataOffset = dbp + 28,
             };
 
+            DataLogger.Log("Location 7 - End of Moment Header Data, before switch - at byte location " + rad.offset);
+            DataLogger.Log(JsonConvert.SerializeObject(data));
+
             switch (type)
             {
                 case "REF":
@@ -176,10 +201,14 @@ namespace nexrad_radar_data_reader
                     data.MomentDataValues = new float[reflectivityData.Count];
                     data.MomentDataValues = reflectivityData.ToArray();
                     rmr.ReflectivityData = data;
+
+                    DataLogger.Log("Location 7a - End of reflectivity data - at byte location " + rad.offset);
+                    DataLogger.Log("Moment Array has " + rmr.ReflectivityData.MomentDataValues.Length + " values");
+
                     break;
                 case "VEL":
                     var velocityData = new List<float>();
-                    for(int i = 28; i <= 1227; i++)
+                    for (int i = 28; i <= 1227; i++)
                     {
                         velocityData.Add((parser.GetDataBlockByte(i) - data.Offset) / data.Scale);
                     }
@@ -187,10 +216,14 @@ namespace nexrad_radar_data_reader
                     data.MomentDataValues = new float[velocityData.Count];
                     data.MomentDataValues = velocityData.ToArray();
                     rmr.VelocityData = data;
+
+                    DataLogger.Log("Location 7b - End of Velocity data - at byte location " + rad.offset);
+                    DataLogger.Log("Moment Array has " + rmr.VelocityData.MomentDataValues.Length + " values");
+
                     break;
                 case "SW":
                     var swData = new List<float>();
-                    for(int i = 28; i <= 1227; i++)
+                    for (int i = 28; i <= 1227; i++)
                     {
                         swData.Add((parser.GetDataBlockByte(i) - data.Offset) / data.Scale);
                     }
@@ -198,10 +231,14 @@ namespace nexrad_radar_data_reader
                     data.MomentDataValues = new float[swData.Count];
                     data.MomentDataValues = swData.ToArray();
                     rmr.SpectrumData = data;
+
+                    DataLogger.Log("Location 7c - End of Spectrum Width data - at byte location " + rad.offset);
+                    DataLogger.Log("Moment Array has " + rmr.SpectrumData.MomentDataValues.Length + " values");
+
                     break;
                 case "ZDR":
                     var zdrData = new List<float>();
-                    for(int i = 28; i <= 1227; i++)
+                    for (int i = 28; i <= 1227; i++)
                     {
                         zdrData.Add((parser.GetDataBlockByte(i) - data.Offset) / data.Scale);
                     }
@@ -209,13 +246,20 @@ namespace nexrad_radar_data_reader
                     data.MomentDataValues = new float[zdrData.Count];
                     data.MomentDataValues = zdrData.ToArray();
                     rmr.ZDRData = data;
+
+                    DataLogger.Log("Location 7d - End of Differential Reflectivity data - at byte location " + rad.offset);
+                    DataLogger.Log("Moment Array has " + rmr.ZDRData.MomentDataValues.Length + " values");
+
                     break;
                 case "PHI":
                     // coming soon...
+
+                    DataLogger.Log("Location 7e - Located PHI data, but no implementation");
+
                     break;
                 case "RHO":
                     var rhoData = new List<float>();
-                    for(int i = 28; i <= 1227; i++)
+                    for (int i = 28; i <= 1227; i++)
                     {
                         rhoData.Add((parser.GetDataBlockByte(i) - data.Offset) / data.Scale);
                     }
@@ -223,6 +267,10 @@ namespace nexrad_radar_data_reader
                     data.MomentDataValues = new float[rhoData.Count];
                     data.MomentDataValues = rhoData.ToArray();
                     rmr.RhoData = data;
+
+                    DataLogger.Log("Location 7f - End of Correlation Coefficient data - at byte location " + rad.offset);
+                    DataLogger.Log("Moment Array has " + rmr.RhoData.MomentDataValues.Length + " values");
+
                     break;
             }
         }

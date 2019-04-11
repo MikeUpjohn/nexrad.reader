@@ -1,0 +1,7 @@
+F:\TempDev\nexrad-radar-data-reader2\nexrad.utilities\bin\Debug\nexrad.utilities.exe.config
+F:\TempDev\nexrad-radar-data-reader2\nexrad.utilities\bin\Debug\nexrad.utilities.exe
+F:\TempDev\nexrad-radar-data-reader2\nexrad.utilities\bin\Debug\nexrad.utilities.pdb
+F:\TempDev\nexrad-radar-data-reader2\nexrad.utilities\obj\Debug\nexrad.utilities.csprojAssemblyReference.cache
+F:\TempDev\nexrad-radar-data-reader2\nexrad.utilities\obj\Debug\nexrad.utilities.csproj.CoreCompileInputs.cache
+F:\TempDev\nexrad-radar-data-reader2\nexrad.utilities\obj\Debug\nexrad.utilities.exe
+F:\TempDev\nexrad-radar-data-reader2\nexrad.utilities\obj\Debug\nexrad.utilities.pdb

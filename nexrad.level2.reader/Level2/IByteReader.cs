@@ -13,6 +13,7 @@
         short ReadShort(byte[] fileData, int skip);
         int ReadInt(byte[] fileData);
         float ReadFloat(byte[] fileData);
+        float ReadFloat(byte[] fileData, int skip);
         string ReadString(byte[] fileData, int length);
     }
 }

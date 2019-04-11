@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using Newtonsoft.Json;
 using nexrad.models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,10 +39,12 @@ namespace nexrad.reader.Level2
 
             while (!IsEndOfFile)
             {
+                RecordNumber++;
                 if(RecordNumber == 134) { int b = 1; }
                 Offset = RecordNumber * Settings.RADAR_DATA_SIZE + Settings.FILE_HEADER_SIZE + VariableMessageOffset;
 
                 if (Offset >= GetLength()) break;
+                File.AppendAllText("F:/TempDev/logs/radar-v2-log.txt", Offset + Environment.NewLine);
 
                 data.Add(_byteReader.Offset);
                 var message = _level2MessageReader.ReadRecord(FileData, Offset);
@@ -56,8 +60,8 @@ namespace nexrad.reader.Level2
                         if (message.Record.PHIData != null) recordMessages.Add(message);
                         if (message.Record.RhoData != null) recordMessages.Add(message);
                     }
-
-                    RecordNumber++;
+                    
+                    //RecordNumber++;
                 }
                 else
                 {
@@ -66,6 +70,11 @@ namespace nexrad.reader.Level2
             }
 
             var orderedResults = GroupAndSortData(recordMessages);
+
+            for(int i = 1; i < orderedResults[0].RecordMessages.Count(); i++) 
+            {
+                File.WriteAllText(JsonConvert.SerializeObject(orderedResults[0].RecordMessages[i - 1]), $"F:\\TempDev\\logs\\nexrad-reader-0-{i}.json");
+            }
 
             return orderedResults;
         }

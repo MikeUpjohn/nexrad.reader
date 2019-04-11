@@ -27,6 +27,7 @@ namespace nexrad.reader.Level2
 
         public RecordMessage ReadRecord(byte[] fileData, int offset)
         {
+            if(offset == 325912) { int b = 11; }
             _byteReader.Seek(offset);
             _byteReader.Skip(Settings.CTM_HEADER_SIZE);
 
@@ -41,10 +42,18 @@ namespace nexrad.reader.Level2
                     message.Record = messageRecord;
 
                     var dataBlockPointers = _message31Reader.ReadDataBlockPointers(fileData);
-                    message.Record.DataBlocks = dataBlockPointers;
 
-                    var volumeData = _message31Reader.ParseVolumeData(fileData);
-                    var elevationData = _message31Reader.ParseElevationData(fileData);
+                    message.Record.DataBlocks = dataBlockPointers;
+                    var test1 = offset + dataBlockPointers.DBP1;
+                    var test2 = offset + dataBlockPointers.DBP2;
+                    var test3 = offset + dataBlockPointers.DBP3;
+                    var test4 = offset + dataBlockPointers.DBP4;
+
+                    var volumeData = _message31Reader.ParseVolumeData(fileData, test1);
+
+                    if(_byteReader.Offset == 326049) { int xxx = 1; }
+
+                    var elevationData = _message31Reader.ParseElevationData(fileData, test2);
                     var radialData = _message31Reader.ParseRadialData(fileData);
 
                     message.Record.VolumeData = volumeData;

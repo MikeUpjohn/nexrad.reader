@@ -6,8 +6,8 @@ namespace nexrad.reader.Level2.IndividualMessages
     {
         RecordMessageRecord ReadMessage31(byte[] fileData);
         RecordMessageRecordDataBlock ReadDataBlockPointers(byte[] fileData);
-        VolumeData ParseVolumeData(byte[] fileData);
-        ElevationData ParseElevationData(byte[] fileData);
+        VolumeData ParseVolumeData(byte[] fileData, int location);
+        ElevationData ParseElevationData(byte[] fileData, int location);
         RadialData ParseRadialData(byte[] fileData);
         MomentData ParseMomentData(byte[] fileData);
         float[] ParseReflectivityMomentData(byte[] fileData, float offset, float scale);

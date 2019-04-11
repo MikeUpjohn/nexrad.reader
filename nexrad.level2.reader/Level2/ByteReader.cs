@@ -96,6 +96,23 @@ namespace nexrad.reader.Level2
             return BitConverter.ToSingle(data, 0);
         }
 
+        public float ReadFloat(byte[] fileData, int skip)
+        {
+            Skip(skip);
+
+            byte[] data = new byte[4];
+            Buffer.BlockCopy(fileData, Offset, data, 0, 4);
+
+            if (IsBigEndian)
+            {
+                Array.Reverse(data, 0, data.Length);
+            }
+
+            Offset += 4;
+
+            return BitConverter.ToSingle(data, 0);
+        }
+
         public string ReadString(byte[] fileData, int length)
         {
             byte[] data = new byte[length];

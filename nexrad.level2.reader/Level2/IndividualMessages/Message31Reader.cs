@@ -56,8 +56,9 @@ namespace nexrad.reader.Level2.IndividualMessages
             return dataBlockPointers;
         }
 
-        public VolumeData ParseVolumeData(byte[] fileData)
+        public VolumeData ParseVolumeData(byte[] fileData, int location)
         {
+            _byteReader.Seek(location + 28);
             var data = new VolumeData()
             {
                 BlockType = _byteReader.ReadString(fileData, 1),
@@ -69,21 +70,22 @@ namespace nexrad.reader.Level2.IndividualMessages
                 Longitude = _byteReader.ReadFloat(fileData),
                 Elevation = _byteReader.ReadShort(fileData),
                 FeedhornHeight = _byteReader.ReadByte(fileData),
-                Calibration = _byteReader.ReadFloat(fileData),
+                Calibration = _byteReader.ReadFloat(fileData, 1),
                 TxHorizontal = _byteReader.ReadFloat(fileData),
                 TxVertical = _byteReader.ReadFloat(fileData),
                 DifferentialReflectivity = _byteReader.ReadFloat(fileData),
                 InitialSystemDifferentialPhase = _byteReader.ReadFloat(fileData),
                 VolumeCoveragePattern = _byteReader.ReadByte(fileData),
             };
-
-            _byteReader.Skip(2);
-
+            
             return data;
         }
 
-        public ElevationData ParseElevationData(byte[] fileData)
+        public ElevationData ParseElevationData(byte[] fileData, int location)
         {
+            _byteReader.Seek(location + 28);
+            if (_byteReader.Offset == 326049) { int aaads = 1; }
+
             var elevationData = new ElevationData()
             {
                 BlockType = _byteReader.ReadString(fileData, 1),
