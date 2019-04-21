@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E634DD11-77DD-4545-A0B6-22AF7C2AC1E7}</ProjectGuid>
+    <ProjectGuid>{7908C563-F5C2-4DFB-A64F-8418509ACFED}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>nexrad_radar_data_reader</RootNamespace>
-    <AssemblyName>nexrad-radar-data-reader</AssemblyName>
+    <RootNamespace>nexrad.utilities</RootNamespace>
+    <AssemblyName>nexrad.utilities</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,23 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataLogger.cs" />
-    <Compile Include="Level2Parser.cs" />
-    <Compile Include="Level2Radar.cs" />
-    <Compile Include="Level2Record.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomAccessFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\nexrad.models\nexrad.models.csproj">
-      <Project>{7a53abc0-20b1-4bd2-81f5-159d32040f90}</Project>
-      <Name>nexrad.models</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

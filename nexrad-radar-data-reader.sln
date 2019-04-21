@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad.models", "nexrad.mod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad.reader", "nexrad.level2.reader\nexrad.reader.csproj", "{8E6201B8-E342-473A-84A8-48CCA02D420A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nexrad.utilities", "nexrad.utilities\nexrad.utilities.csproj", "{7908C563-F5C2-4DFB-A64F-8418509ACFED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8E6201B8-E342-473A-84A8-48CCA02D420A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E6201B8-E342-473A-84A8-48CCA02D420A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E6201B8-E342-473A-84A8-48CCA02D420A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7908C563-F5C2-4DFB-A64F-8418509ACFED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7908C563-F5C2-4DFB-A64F-8418509ACFED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7908C563-F5C2-4DFB-A64F-8418509ACFED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7908C563-F5C2-4DFB-A64F-8418509ACFED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
