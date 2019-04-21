@@ -34,6 +34,18 @@ namespace nexrad.reader.Level2
             return data.First();
         }
 
+        public byte ReadByte(byte[] fileData, int skip)
+        {
+            Skip(skip);
+
+            byte[] data = new byte[1];
+            Buffer.BlockCopy(fileData, Offset, data, 0, 1);
+
+            Offset++;
+
+            return data.First();
+        }
+
         public short ReadShort(byte[] fileData)
         {
             byte[] data = new byte[2];

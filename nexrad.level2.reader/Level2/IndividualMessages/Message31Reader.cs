@@ -173,6 +173,9 @@ namespace nexrad.reader.Level2.IndividualMessages
 
         public float[] ParseReflectivityMomentData(byte[] fileData, float offset, float scale, int fileoffset, int dbp)
         {
+            _byteReader.Seek(fileoffset + dbp + 28);
+            _byteReader.Skip(28);
+
             var reflectivityData = new List<float>();
 
             for (var i = 28; i <= 1867; i++)
@@ -187,6 +190,8 @@ namespace nexrad.reader.Level2.IndividualMessages
         public float[] ParseVelocityMomentData(byte[] fileData, float offset, float scale, int fileoffset, int dbp)
         {
             _byteReader.Seek(fileoffset + dbp + 28);
+            _byteReader.Skip(28);
+
             var velocityData = new List<float>();
 
             for (var i = 28; i <= 1227; i++)
@@ -201,6 +206,8 @@ namespace nexrad.reader.Level2.IndividualMessages
         public float[] ParseSpectrumWidthMomentData(byte[] fileData, float offset, float scale, int fileoffset, int dbp)
         {
             _byteReader.Seek(fileoffset + dbp + 28);
+            _byteReader.Skip(28);
+
             var spectrumWidthData = new List<float>();
 
             for (var i = 28; i <= 1227; i++)
@@ -215,6 +222,8 @@ namespace nexrad.reader.Level2.IndividualMessages
         public float[] ParseDifferentialReflectivityMomentData(byte[] fileData, float offset, float scale, int fileoffset, int dbp)
         {
             _byteReader.Seek(fileoffset + dbp + 28);
+            _byteReader.Skip(28);
+
             var differentialReflectivityData = new List<float>();
 
             for (var i = 28; i <= 1227; i++)
@@ -229,6 +238,8 @@ namespace nexrad.reader.Level2.IndividualMessages
         public float[] ParseDifferentialPhaseMomentData(byte[] fileData, float offset, float scale, int fileoffset, int dbp)
         {
             _byteReader.Seek(fileoffset + dbp + 28);
+            _byteReader.Skip(28);
+
             var differentialPhaseData = new List<float>();
 
             for (var i = 28; i <= 1227; i++)
@@ -243,6 +254,8 @@ namespace nexrad.reader.Level2.IndividualMessages
         public float[] ParseCorrelationCoefficientMomentData(byte[] fileData, float offset, float scale, int fileoffset, int dbp)
         {
             _byteReader.Seek(fileoffset + dbp + 28);
+            _byteReader.Skip(28);
+
             var correlationCoefficientData = new List<float>();
 
             for (var i = 28; i <= 1227; i++)

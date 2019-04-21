@@ -65,7 +65,7 @@ namespace nexrad.reader.Level2
                         if (message.Record.RhoData != null) recordMessages.Add(message);
                     }
                     
-                    //RecordNumber++;
+                    RecordNumber++;
                 }
                 else
                 {
