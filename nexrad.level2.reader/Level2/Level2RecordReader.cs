@@ -37,13 +37,18 @@ namespace nexrad.reader.Level2
 
             while (!IsEndOfFile)
             {
-                if(RecordNumber == 134) { int b = 1; }
+                if (RecordNumber == 854) { int b = 1; }
                 Offset = RecordNumber * Settings.RADAR_DATA_SIZE + Settings.FILE_HEADER_SIZE + VariableMessageOffset;
 
                 if (Offset >= GetLength()) break;
 
                 data.Add(_byteReader.Offset);
                 var message = _level2MessageReader.ReadRecord(FileData, Offset);
+
+                if (message.MessageType == 31)
+                {
+                    VariableMessageOffset = VariableMessageOffset + (message.MessageSize * 2 + 12 - 2432);
+                }
 
                 if (message != null)
                 {

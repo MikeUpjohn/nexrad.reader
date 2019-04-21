@@ -45,9 +45,9 @@ namespace nexrad.reader.Level2
                     var dataBlockPointers = _message31Reader.ReadDataBlockPointers(fileData);
                     message.Record.DataBlocks = dataBlockPointers;
 
-                    var volumeData = _message31Reader.ParseVolumeData(fileData);
-                    var elevationData = _message31Reader.ParseElevationData(fileData);
-                    var radialData = _message31Reader.ParseRadialData(fileData);
+                    var volumeData = _message31Reader.ParseVolumeData(fileData, offset, dataBlockPointers.DBP1);
+                    var elevationData = _message31Reader.ParseElevationData(fileData, offset, dataBlockPointers.DBP2);
+                    var radialData = _message31Reader.ParseRadialData(fileData, offset, dataBlockPointers.DBP3);
 
                     message.Record.VolumeData = volumeData;
                     message.Record.ElevationData = elevationData;
@@ -55,48 +55,65 @@ namespace nexrad.reader.Level2
 
                     #region Getting Individual Moment Data - the cool bit...
 
-                    var reflectivityData = _message31Reader.ParseMomentData(fileData);
-                    var reflectivityMomentData = _message31Reader.ParseReflectivityMomentData(fileData, reflectivityData.Offset, reflectivityData.Scale);
-                    reflectivityData.MomentDataValues = reflectivityMomentData;
+                    var reflectivityData = _message31Reader.ParseMomentData(fileData, offset, dataBlockPointers.DBP4);
+                    if (reflectivityData != null)
+                    {
+                        var reflectivityMomentData = _message31Reader.ParseReflectivityMomentData(fileData, reflectivityData.Offset, reflectivityData.Scale, offset, dataBlockPointers.DBP4);
+                        reflectivityData.MomentDataValues = reflectivityMomentData;
 
-                    _dataLogger.Log("Location 7a - End of reflectivity data - at byte location " + _byteReader.Offset);
-                    _dataLogger.Log("Moment Array has " + reflectivityData.MomentDataValues.Length + " values");
+                        _dataLogger.Log("Location 7a - End of reflectivity data - at byte location " + _byteReader.Offset);
+                        _dataLogger.Log("Moment Array has " + reflectivityData.MomentDataValues.Length + " values");
+                    }
 
-                    var velocityData = _message31Reader.ParseMomentData(fileData);
-                    var velocityMomentData = _message31Reader.ParseVelocityMomentData(fileData, velocityData.Offset, velocityData.Scale);
-                    velocityData.MomentDataValues = velocityMomentData;
+                    var velocityData = _message31Reader.ParseMomentData(fileData, offset, dataBlockPointers.DBP5);
+                    if (velocityData != null)
+                    {
+                        var velocityMomentData = _message31Reader.ParseVelocityMomentData(fileData, velocityData.Offset, velocityData.Scale, offset, dataBlockPointers.DBP5);
+                        velocityData.MomentDataValues = velocityMomentData;
 
-                    _dataLogger.Log("Location 7b - End of reflectivity data - at byte location " + _byteReader.Offset);
-                    _dataLogger.Log("Moment Array has " + velocityData.MomentDataValues.Length + " values");
+                        _dataLogger.Log("Location 7b - End of reflectivity data - at byte location " + _byteReader.Offset);
+                        _dataLogger.Log("Moment Array has " + velocityData.MomentDataValues.Length + " values");
+                    }
 
-                    var spectrumWidthData = _message31Reader.ParseMomentData(fileData);
-                    var spectrumWidthMomentData = _message31Reader.ParseSpectrumWidthMomentData(fileData, spectrumWidthData.Offset, spectrumWidthData.Scale);
-                    spectrumWidthData.MomentDataValues = spectrumWidthMomentData;
+                    var spectrumWidthData = _message31Reader.ParseMomentData(fileData, offset, dataBlockPointers.DBP6);
+                    if (spectrumWidthData != null)
+                    {
+                        var spectrumWidthMomentData = _message31Reader.ParseSpectrumWidthMomentData(fileData, spectrumWidthData.Offset, spectrumWidthData.Scale, offset, dataBlockPointers.DBP6);
+                        spectrumWidthData.MomentDataValues = spectrumWidthMomentData;
 
-                    _dataLogger.Log("Location 7c - End of Spectrum Width data - at byte location " + _byteReader.Offset);
-                    _dataLogger.Log("Moment Array has " + spectrumWidthData.MomentDataValues + " values");
+                        _dataLogger.Log("Location 7c - End of Spectrum Width data - at byte location " + _byteReader.Offset);
+                        _dataLogger.Log("Moment Array has " + spectrumWidthData.MomentDataValues + " values");
+                    }
 
-                    var differentialReflectivityData = _message31Reader.ParseMomentData(fileData);
-                    var differentialReflectivityMomentData = _message31Reader.ParseDifferentialReflectivityMomentData(fileData, differentialReflectivityData.Offset, differentialReflectivityData.Scale);
-                    differentialReflectivityData.MomentDataValues = differentialReflectivityMomentData;
+                    var differentialReflectivityData = _message31Reader.ParseMomentData(fileData, offset, dataBlockPointers.DBP7);
+                    if (differentialReflectivityData != null)
+                    {
+                        var differentialReflectivityMomentData = _message31Reader.ParseDifferentialReflectivityMomentData(fileData, differentialReflectivityData.Offset, differentialReflectivityData.Scale, offset, dataBlockPointers.DBP7);
+                        differentialReflectivityData.MomentDataValues = differentialReflectivityMomentData;
 
-                    _dataLogger.Log("Location 7d - End of Differential Reflectivity data - at byte location " + _byteReader.Offset);
-                    _dataLogger.Log("Moment Array has " + differentialReflectivityData.MomentDataValues + " values");
+                        _dataLogger.Log("Location 7d - End of Differential Reflectivity data - at byte location " + _byteReader.Offset);
+                        _dataLogger.Log("Moment Array has " + differentialReflectivityData.MomentDataValues + " values");
+                    }
 
-                    var differentialPhaseData = _message31Reader.ParseMomentData(fileData);
-                    var differentialPhaseMomentData = _message31Reader.ParseDifferentialPhaseMomentData(fileData, differentialPhaseData.Offset, differentialPhaseData.Scale);
-                    differentialPhaseData.MomentDataValues = differentialPhaseMomentData;
+                    var differentialPhaseData = _message31Reader.ParseMomentData(fileData, offset, dataBlockPointers.DBP8);
+                    if (differentialPhaseData != null)
+                    {
+                        var differentialPhaseMomentData = _message31Reader.ParseDifferentialPhaseMomentData(fileData, differentialPhaseData.Offset, differentialPhaseData.Scale, offset, dataBlockPointers.DBP8);
+                        differentialPhaseData.MomentDataValues = differentialPhaseMomentData;
 
-                    _dataLogger.Log("Location 7e - End of PHI Data - at byte location " + _byteReader.Offset);
-                    _dataLogger.Log("Moment Array has " + differentialPhaseData.MomentDataValues);
+                        _dataLogger.Log("Location 7e - End of PHI Data - at byte location " + _byteReader.Offset);
+                        _dataLogger.Log("Moment Array has " + differentialPhaseData.MomentDataValues);
+                    }
 
-                    var correlationCoefficientData = _message31Reader.ParseMomentData(fileData);
-                    var correlationCoefficientMomentData = _message31Reader.ParseCorrelationCoefficientMomentData(fileData, correlationCoefficientData.Offset, correlationCoefficientData.Scale);
-                    correlationCoefficientData.MomentDataValues = correlationCoefficientMomentData;
+                    var correlationCoefficientData = _message31Reader.ParseMomentData(fileData, offset, dataBlockPointers.DBP9);
+                    if (correlationCoefficientData != null)
+                    {
+                        var correlationCoefficientMomentData = _message31Reader.ParseCorrelationCoefficientMomentData(fileData, correlationCoefficientData.Offset, correlationCoefficientData.Scale, offset, dataBlockPointers.DBP9);
+                        correlationCoefficientData.MomentDataValues = correlationCoefficientMomentData;
 
-                    _dataLogger.Log("Location 7f - End of Correlation Coefficient data - at byte location " + _byteReader.Offset);
-                    _dataLogger.Log("Moment Array has " + correlationCoefficientData.MomentDataValues.Length + " values");
-
+                        _dataLogger.Log("Location 7f - End of Correlation Coefficient data - at byte location " + _byteReader.Offset);
+                        _dataLogger.Log("Moment Array has " + correlationCoefficientData.MomentDataValues.Length + " values");
+                    }
                     #endregion
 
                     message.Record.ReflectivityData = reflectivityData;
