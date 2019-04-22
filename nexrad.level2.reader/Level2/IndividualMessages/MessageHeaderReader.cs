@@ -21,8 +21,8 @@ namespace nexrad.reader.Level2.IndividualMessages
             var record = new RecordMessage()
             {
                 MessageSize = _byteReader.ReadShort(fileData),
-                Channel = _byteReader.ReadByte(fileData),
-                MessageType = _byteReader.ReadByte(fileData),
+                Channel = _byteReader.ReadByte(fileData).Value,
+                MessageType = _byteReader.ReadByte(fileData).Value,
                 IdSequence = _byteReader.ReadShort(fileData),
                 MessageJulianDate = _byteReader.ReadShort(fileData),
                 MessageMilliseconds = _byteReader.ReadInt(fileData),

@@ -24,10 +24,17 @@ namespace nexrad.reader.Level2
 
         #endregion
 
-        public byte ReadByte(byte[] fileData)
+        public byte? ReadByte(byte[] fileData)
         {
             byte[] data = new byte[1];
-            Buffer.BlockCopy(fileData, Offset, data, 0, 1);
+            try
+            {
+                Buffer.BlockCopy(fileData, Offset, data, 0, 1);
+            }
+            catch
+            {
+                return null;
+            }
 
             Offset++;
 

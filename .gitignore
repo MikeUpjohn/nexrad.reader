@@ -22,3 +22,7 @@ nexrad\.level2\.reader/obj/
 nexrad\.models/bin/
 
 nexrad\.models/obj/
+
+nexrad\.utilities/bin/
+
+nexrad\.utilities/obj/

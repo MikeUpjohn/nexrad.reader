@@ -39,7 +39,7 @@ namespace nexrad.reader.Level2
 
             while (!IsEndOfFile)
             {
-                if (RecordNumber == 854) { int b = 1; }
+                if (RecordNumber == 5535) { int b = 1; }
                 Offset = RecordNumber * Settings.RADAR_DATA_SIZE + Settings.FILE_HEADER_SIZE + VariableMessageOffset;
 
                 if (Offset >= GetLength()) break;

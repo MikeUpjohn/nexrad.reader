@@ -7,9 +7,14 @@ namespace nexrad.reader.Level2
     [InstancePerLifetimeScope]
     public class DataLogger : IDataLogger
     {
+        private bool isOn = false;
+
         public void Log(string text)
         {
-            File.AppendAllText("F:/TempDev/logs/radar-v2-log.txt", text + Environment.NewLine);
+            if (isOn)
+            {
+                File.AppendAllText("F:/TempDev/logs/radar-v2-log.txt", text + Environment.NewLine);
+            }
         }
     }
 }

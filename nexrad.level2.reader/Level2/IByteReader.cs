@@ -8,7 +8,7 @@
         void Seek(int to);
         void Skip(int count);
 
-        byte ReadByte(byte[] fileData);
+        byte? ReadByte(byte[] fileData);
         byte ReadByte(byte[] fileData, int skip);
         short ReadShort(byte[] fileData);
         short ReadShort(byte[] fileData, int skip);

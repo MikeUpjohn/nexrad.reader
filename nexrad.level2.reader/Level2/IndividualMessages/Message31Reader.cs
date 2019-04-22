@@ -26,16 +26,16 @@ namespace nexrad.reader.Level2.IndividualMessages
                 JulianDate = _byteReader.ReadShort(fileData),
                 RadialNumber = _byteReader.ReadShort(fileData),
                 Azimuth = _byteReader.ReadFloat(fileData),
-                CompressIdx = _byteReader.ReadByte(fileData),
-                Sp = _byteReader.ReadByte(fileData),
+                CompressIdx = _byteReader.ReadByte(fileData).Value,
+                Sp = _byteReader.ReadByte(fileData).Value,
                 RadialLength = _byteReader.ReadShort(fileData),
-                ARS = _byteReader.ReadByte(fileData),
-                RS = _byteReader.ReadByte(fileData),
-                ElevationNumber = _byteReader.ReadByte(fileData),
-                Cut = _byteReader.ReadByte(fileData),
+                ARS = _byteReader.ReadByte(fileData).Value,
+                RS = _byteReader.ReadByte(fileData).Value,
+                ElevationNumber = _byteReader.ReadByte(fileData).Value,
+                Cut = _byteReader.ReadByte(fileData).Value,
                 Elevation = _byteReader.ReadFloat(fileData),
-                RSBS = _byteReader.ReadByte(fileData),
-                AIM = _byteReader.ReadByte(fileData),
+                RSBS = _byteReader.ReadByte(fileData).Value,
+                AIM = _byteReader.ReadByte(fileData).Value,
                 DCount = _byteReader.ReadShort(fileData),
             };
 
@@ -76,18 +76,18 @@ namespace nexrad.reader.Level2.IndividualMessages
                 BlockType = _byteReader.ReadString(fileData, 1),
                 Name = _byteReader.ReadString(fileData, 3),
                 Size = _byteReader.ReadShort(fileData),
-                VersionMajor = _byteReader.ReadByte(fileData),
-                VersionMinor = _byteReader.ReadByte(fileData),
+                VersionMajor = _byteReader.ReadByte(fileData).Value,
+                VersionMinor = _byteReader.ReadByte(fileData).Value,
                 Latitude = _byteReader.ReadFloat(fileData),
                 Longitude = _byteReader.ReadFloat(fileData),
                 Elevation = _byteReader.ReadShort(fileData),
-                FeedhornHeight = _byteReader.ReadByte(fileData),
+                FeedhornHeight = _byteReader.ReadByte(fileData).Value,
                 Calibration = _byteReader.ReadFloat(fileData, 1),
                 TxHorizontal = _byteReader.ReadFloat(fileData),
                 TxVertical = _byteReader.ReadFloat(fileData),
                 DifferentialReflectivity = _byteReader.ReadFloat(fileData),
                 InitialSystemDifferentialPhase = _byteReader.ReadFloat(fileData),
-                VolumeCoveragePattern = _byteReader.ReadByte(fileData),
+                VolumeCoveragePattern = _byteReader.ReadByte(fileData).Value,
             };
 
             #region Pending Delete
@@ -155,8 +155,8 @@ namespace nexrad.reader.Level2.IndividualMessages
                     GateSize = (_byteReader.ReadShort(fileData) / 1000),
                     RfThreshold = (_byteReader.ReadShort(fileData) / 10),
                     SnrThreshold = (_byteReader.ReadShort(fileData) / 1000),
-                    ControlFlags = _byteReader.ReadByte(fileData),
-                    DataSize = _byteReader.ReadByte(fileData),
+                    ControlFlags = _byteReader.ReadByte(fileData).Value,
+                    DataSize = _byteReader.ReadByte(fileData).Value,
                     Scale = _byteReader.ReadFloat(fileData),
                     Offset = _byteReader.ReadFloat(fileData),
                     DataOffset = dbp + 28,
@@ -180,8 +180,17 @@ namespace nexrad.reader.Level2.IndividualMessages
 
             for (var i = 28; i <= 1867; i++)
             {
-                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
-                reflectivityData.Add(data);
+                var byteData = _byteReader.ReadByte(fileData);
+
+                if (byteData != null)
+                {
+                    var data = (byteData.Value - offset) / scale;
+                    reflectivityData.Add(data);
+                }
+                else
+                {
+                    break;
+                }
             }
 
             return reflectivityData.ToArray();
@@ -196,8 +205,17 @@ namespace nexrad.reader.Level2.IndividualMessages
 
             for (var i = 28; i <= 1227; i++)
             {
-                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
-                velocityData.Add(data);
+                var byteData = _byteReader.ReadByte(fileData);
+
+                if (byteData != null)
+                {
+                    var data = (byteData.Value - offset) / scale;
+                    velocityData.Add(data);
+                }
+                else
+                {
+                    break;
+                }
             }
 
             return velocityData.ToArray();
@@ -212,8 +230,17 @@ namespace nexrad.reader.Level2.IndividualMessages
 
             for (var i = 28; i <= 1227; i++)
             {
-                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
-                spectrumWidthData.Add(data);
+                var byteData = _byteReader.ReadByte(fileData);
+
+                if (byteData != null)
+                {
+                    var data = (byteData.Value - offset) / scale;
+                    spectrumWidthData.Add(data);
+                }
+                else
+                {
+                    break;
+                }
             }
 
             return spectrumWidthData.ToArray();
@@ -228,8 +255,17 @@ namespace nexrad.reader.Level2.IndividualMessages
 
             for (var i = 28; i <= 1227; i++)
             {
-                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
-                differentialReflectivityData.Add(data);
+                var byteData = _byteReader.ReadByte(fileData);
+
+                if (byteData != null)
+                {
+                    var data = (byteData.Value - offset) / scale;
+                    differentialReflectivityData.Add(data);
+                }
+                else
+                {
+                    break;
+                }
             }
 
             return differentialReflectivityData.ToArray();
@@ -244,8 +280,17 @@ namespace nexrad.reader.Level2.IndividualMessages
 
             for (var i = 28; i <= 1227; i++)
             {
-                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
-                differentialPhaseData.Add(data);
+                var byteData = _byteReader.ReadByte(fileData);
+
+                if (byteData != null)
+                {
+                    var data = (byteData.Value - offset) / scale;
+                    differentialPhaseData.Add(data);
+                }
+                else
+                {
+                    break;
+                }
             }
 
             return differentialPhaseData.ToArray();
@@ -260,8 +305,17 @@ namespace nexrad.reader.Level2.IndividualMessages
 
             for (var i = 28; i <= 1227; i++)
             {
-                var data = (_byteReader.ReadByte(fileData) - offset) / scale;
-                correlationCoefficientData.Add(data);
+                var byteData = _byteReader.ReadByte(fileData);
+
+                if (byteData != null)
+                {
+                    var data = (byteData.Value - offset) / scale;
+                    correlationCoefficientData.Add(data);
+                }
+                else
+                {
+                    break;
+                }
             }
 
             return correlationCoefficientData.ToArray();
