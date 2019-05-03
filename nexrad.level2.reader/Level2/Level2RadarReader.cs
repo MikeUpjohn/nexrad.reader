@@ -17,9 +17,7 @@ namespace nexrad.reader.Level2
         public void RunLevel2Radar(string fileName)
         {
             _level2RecordReader.LoadFile(fileName);
-            var results = _level2RecordReader.Read();
-
-            int a = 1;
+            var data = _level2RecordReader.Read();
         }
     }
 }

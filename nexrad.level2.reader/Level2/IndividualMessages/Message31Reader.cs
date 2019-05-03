@@ -59,8 +59,6 @@ namespace nexrad.reader.Level2.IndividualMessages
                 DBP9 = _byteReader.ReadInt(fileData),
             };
 
-
-            if (_byteReader.Offset == 326008) { int dd = 1; }
             _dataLogger.Log("Location 3 - End of Data Block Pointers - at byte location " + _byteReader.Offset);
             _dataLogger.Log(JsonConvert.SerializeObject(new List<int>() { dataBlockPointers.DBP1, dataBlockPointers.DBP2, dataBlockPointers.DBP3, dataBlockPointers.DBP4, dataBlockPointers.DBP5, dataBlockPointers.DBP6, dataBlockPointers.DBP7, dataBlockPointers.DBP8, dataBlockPointers.DBP9 }));
 
@@ -89,11 +87,7 @@ namespace nexrad.reader.Level2.IndividualMessages
                 InitialSystemDifferentialPhase = _byteReader.ReadFloat(fileData),
                 VolumeCoveragePattern = _byteReader.ReadByte(fileData).Value,
             };
-
-            #region Pending Delete
-            //_byteReader.Skip(2);
-            #endregion
-
+            
             _dataLogger.Log("Location 4 - End of Volume Data - at byte location - " + _byteReader.Offset);
             _dataLogger.Log(JsonConvert.SerializeObject(data));
 
@@ -103,7 +97,6 @@ namespace nexrad.reader.Level2.IndividualMessages
         public ElevationData ParseElevationData(byte[] fileData, int offset, int dbp)
         {
             _byteReader.Seek(offset + dbp + 28);
-            if (_byteReader.Offset == 326049) { int y = 1; }
             var elevationData = new ElevationData()
             {
                 BlockType = _byteReader.ReadString(fileData, 1),

@@ -29,7 +29,6 @@ namespace nexrad.reader.Level2
 
         public RecordMessage ReadRecord(byte[] fileData, int offset)
         {
-            if(offset == 325912) { int b = 11; }
             _byteReader.Seek(offset);
             _byteReader.Skip(Settings.CTM_HEADER_SIZE);
 
@@ -44,12 +43,7 @@ namespace nexrad.reader.Level2
                     message.Record = messageRecord;
 
                     var dataBlockPointers = _message31Reader.ReadDataBlockPointers(fileData);
-
                     message.Record.DataBlocks = dataBlockPointers;
-                    var test1 = offset + dataBlockPointers.DBP1;
-                    var test2 = offset + dataBlockPointers.DBP2;
-                    var test3 = offset + dataBlockPointers.DBP3;
-                    var test4 = offset + dataBlockPointers.DBP4;
 
                     var volumeData = _message31Reader.ParseVolumeData(fileData, offset, dataBlockPointers.DBP1);
                     var elevationData = _message31Reader.ParseElevationData(fileData, offset, dataBlockPointers.DBP2);
@@ -58,9 +52,7 @@ namespace nexrad.reader.Level2
                     message.Record.VolumeData = volumeData;
                     message.Record.ElevationData = elevationData;
                     message.Record.RadialData = radialData;
-
-                    #region Getting Individual Moment Data - the cool bit...
-
+                    
                     var reflectivityData = _message31Reader.ParseMomentData(fileData, offset, dataBlockPointers.DBP4);
                     if (reflectivityData != null)
                     {
@@ -120,7 +112,6 @@ namespace nexrad.reader.Level2
                         _dataLogger.Log("Location 7f - End of Correlation Coefficient data - at byte location " + _byteReader.Offset);
                         _dataLogger.Log("Moment Array has " + correlationCoefficientData.MomentDataValues.Length + " values");
                     }
-                    #endregion
 
                     message.Record.ReflectivityData = reflectivityData;
                     message.Record.VelocityData = velocityData;
@@ -131,13 +122,9 @@ namespace nexrad.reader.Level2
 
                     break;
                 default:
-
                     _dataLogger.Log("Location 8 - Not a Message31 message. Moving on to next message");
                     break;
             }
-
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(message);
-            int a = 1;
 
             return message;
         }
