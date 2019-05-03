@@ -1,8 +1,9 @@
-﻿using nexrad.models;
-using nexrad_radar_data_reader.Models;
+﻿using Newtonsoft.Json;
+using nexrad.models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace nexrad_radar_data_reader
@@ -32,15 +33,19 @@ namespace nexrad_radar_data_reader
             int recordNo = 0;
             bool endOfFile = false;
             List<RecordMessage> momentData = new List<RecordMessage>();
+            List<int> recordStatus = new List<int>();
 
             while (true && !endOfFile)
             {
+                if(recordNo == 134) { int ass = 1; }
                 var x = new Level2Record(raf, recordNo++, messageOffset31);
 
                 var recordOffset = recordNo * Settings.RADAR_DATA_SIZE + Settings.FILE_HEADER_SIZE + messageOffset31;
                 if (recordOffset >= raf.GetLength()) break;
+                File.AppendAllText("F:/TempDev/logs/radar-v1-log.txt", recordOffset + Environment.NewLine);
 
                 var message = x.GetRecord(raf);
+                recordStatus.Add(raf.offset);
 
                 if (message != null)
                 {
@@ -69,6 +74,14 @@ namespace nexrad_radar_data_reader
             }
 
             var oute = GroupAndSortData(momentData);
+            
+            for(var i = 1; i <= oute[0].RecordMessages.Count(); i++)
+            {
+                var json = JsonConvert.SerializeObject(oute[0].RecordMessages[i-1]);
+                File.WriteAllText($"F:\\TempDev\\logs\\final-output-0-{i}-.json", json);
+
+            }
+
             
             watch.Stop();
 

@@ -31,7 +31,9 @@
         public byte RSBS { get; set; }
         public byte AIM { get; set; }
         public short DCount { get; set; }
-        //public RecordMessageRecordDataBlock DataBlocks { get; set; }
+
+        public RecordMessageRecordDataBlock DataBlocks { get; set; }
+
         public VolumeData VolumeData { get; set; }
         public ElevationData ElevationData { get; set; }
         public RadialData RadialData { get; set; }

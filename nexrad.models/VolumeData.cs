@@ -15,6 +15,8 @@
         public float TxHorizontal { get; set; }
         public float TxVertical { get; set; }
         public float DifferentialReflectivity { get; set; }
+        public float InitialSystemDifferentialPhase { get; set; }
         public byte VolumeCoveragePattern { get; set; }
+
     }
 }
