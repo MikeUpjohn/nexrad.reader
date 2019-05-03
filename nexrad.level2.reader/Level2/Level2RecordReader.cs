@@ -11,16 +11,16 @@ namespace nexrad.reader.Level2
     [InstancePerLifetimeScope]
     public class Level2RecordReader : ILevel2RecordReader
     {
+        #region Private Variables
         private int RecordNumber = 0;
         private int Offset = 0;
         private int VariableMessageOffset = 0;
         private bool IsEndOfFile = false;
-
         private byte[] FileData = null;
+        #endregion
 
         private readonly ILevel2MessageReader _level2MessageReader;
         private readonly IByteReader _byteReader;
-        List<int> data = new List<int>();
 
         public Level2RecordReader(ILevel2MessageReader level2MessageReader, IByteReader byteReader)
         {
@@ -39,13 +39,9 @@ namespace nexrad.reader.Level2
 
             while (!IsEndOfFile)
             {
-                if (RecordNumber == 5535) { int b = 1; }
                 Offset = RecordNumber * Settings.RADAR_DATA_SIZE + Settings.FILE_HEADER_SIZE + VariableMessageOffset;
 
-                if (Offset >= GetLength()) break;
-                File.AppendAllText("F:/TempDev/logs/radar-v2-log.txt", Offset + Environment.NewLine);
-
-                data.Add(_byteReader.Offset);
+                if (Offset >= GetLength()) break;                
                 var message = _level2MessageReader.ReadRecord(FileData, Offset);
 
                 if (message.MessageType == 31)
@@ -74,11 +70,6 @@ namespace nexrad.reader.Level2
             }
 
             var orderedResults = GroupAndSortData(recordMessages);
-
-            for(int i = 1; i < orderedResults[0].RecordMessages.Count(); i++) 
-            {
-                File.WriteAllText(JsonConvert.SerializeObject(orderedResults[0].RecordMessages[i - 1]), $"F:\\TempDev\\logs\\nexrad-reader-0-{i}.json");
-            }
 
             return orderedResults;
         }
