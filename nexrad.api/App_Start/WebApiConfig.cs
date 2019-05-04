@@ -3,6 +3,8 @@ using System.Web.Http;
 using Autofac.Integration.WebApi;
 using System.Reflection;
 using nexrad.api.Controllers;
+using nexrad.reader.Level2;
+using nexrad.reader.Level2.IndividualMessages;
 
 namespace nexrad.api
 {
@@ -24,6 +26,13 @@ namespace nexrad.api
             var builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterType<HomeController>().InstancePerRequest();
+            builder.RegisterType<Level2RadarReader>().As<ILevel2RadarReader>();
+            builder.RegisterType<Level2RecordReader>().As<ILevel2RecordReader>();
+            builder.RegisterType<Message31Reader>().As<IMessage31Reader>();
+            builder.RegisterType<MessageHeaderReader>().As<IMessageHeaderReader>();
+            builder.RegisterType<ByteReader>().As<IByteReader>();
+            builder.RegisterType<DataLogger>().As<IDataLogger>();
+            builder.RegisterType<Level2MessageReader>().As<ILevel2MessageReader>();
 
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);

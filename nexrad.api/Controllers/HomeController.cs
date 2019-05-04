@@ -1,8 +1,10 @@
-﻿using nexrad.reader.Level2;
+using Autofac.Integration.WebApi;
+using nexrad.reader.Level2;
 using System.Web.Http;
 
 namespace nexrad.api.Controllers
 {
+    [AutofacControllerConfiguration]
     [RoutePrefix("api/v1/nexrad")]
     public class HomeController : ApiController
     {
