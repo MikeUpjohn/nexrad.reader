@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Autofac;
 using System.Web.Http;
+using Autofac.Integration.WebApi;
+using System.Reflection;
+using nexrad.api.Controllers;
 
 namespace nexrad.api
 {
@@ -19,6 +20,13 @@ namespace nexrad.api
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            var builder = new ContainerBuilder();
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.RegisterType<HomeController>().InstancePerRequest();
+
+            var container = builder.Build();
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
         }
     }
 }
