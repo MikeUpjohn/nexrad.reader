@@ -18,8 +18,8 @@ namespace nexrad.api.Controllers
         [Route("high-res")]
         public IHttpActionResult GetHighResReflectivity(string fileName)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F:// " + fileName);
-            return Ok(true);
+            var data = _level2RadarReader.RunLevel2Radar("F://" + fileName);
+            return Ok(data.Count);
         }
     }
 }

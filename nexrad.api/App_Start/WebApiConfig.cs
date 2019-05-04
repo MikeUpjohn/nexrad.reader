@@ -26,13 +26,13 @@ namespace nexrad.api
             var builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterType<HomeController>().InstancePerRequest();
-            builder.RegisterType<Level2RadarReader>().As<ILevel2RadarReader>();
-            builder.RegisterType<Level2RecordReader>().As<ILevel2RecordReader>();
-            builder.RegisterType<Message31Reader>().As<IMessage31Reader>();
-            builder.RegisterType<MessageHeaderReader>().As<IMessageHeaderReader>();
-            builder.RegisterType<ByteReader>().As<IByteReader>();
-            builder.RegisterType<DataLogger>().As<IDataLogger>();
-            builder.RegisterType<Level2MessageReader>().As<ILevel2MessageReader>();
+            builder.RegisterType<Level2RadarReader>().As<ILevel2RadarReader>().InstancePerRequest();
+            builder.RegisterType<Level2RecordReader>().As<ILevel2RecordReader>().InstancePerRequest();
+            builder.RegisterType<Message31Reader>().As<IMessage31Reader>().InstancePerRequest();
+            builder.RegisterType<MessageHeaderReader>().As<IMessageHeaderReader>().InstancePerRequest();
+            builder.RegisterType<ByteReader>().As<IByteReader>().InstancePerRequest();
+            builder.RegisterType<DataLogger>().As<IDataLogger>().InstancePerRequest();
+            builder.RegisterType<Level2MessageReader>().As<ILevel2MessageReader>().InstancePerRequest();
 
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
