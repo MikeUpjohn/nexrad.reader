@@ -3,6 +3,7 @@ using nexrad.api.Models;
 using nexrad.models;
 using nexrad.reader.Level2;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 
 namespace nexrad.api.Controllers
@@ -39,6 +40,15 @@ namespace nexrad.api.Controllers
 
                 return Ok(scans);
             }
+        }
+
+        [HttpGet]
+        [Route("scans")]
+        public IHttpActionResult GetScans(RadarQuery query)
+        {
+            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
+            return Ok(data[query.ElevationNumber].RecordMessages.Count());
         }
     }
 }
