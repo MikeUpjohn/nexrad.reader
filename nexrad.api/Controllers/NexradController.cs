@@ -9,11 +9,11 @@ namespace nexrad.api.Controllers
 {
     [AutofacControllerConfiguration]
     [RoutePrefix("api/v1/nexrad")]
-    public class HomeController : ApiController
+    public class NexradController : ApiController
     {
         private readonly ILevel2RadarReader _level2RadarReader;
 
-        public HomeController(ILevel2RadarReader level2RadarReader)
+        public NexradController(ILevel2RadarReader level2RadarReader)
         {
             _level2RadarReader = level2RadarReader;
         }

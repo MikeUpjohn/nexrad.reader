@@ -25,7 +25,7 @@ namespace nexrad.api
 
             var builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            builder.RegisterType<HomeController>().InstancePerRequest();
+            builder.RegisterType<NexradController>().InstancePerRequest();
             builder.RegisterType<Level2RadarReader>().As<ILevel2RadarReader>().InstancePerRequest();
             builder.RegisterType<Level2RecordReader>().As<ILevel2RecordReader>().InstancePerRequest();
             builder.RegisterType<Message31Reader>().As<IMessage31Reader>().InstancePerRequest();
