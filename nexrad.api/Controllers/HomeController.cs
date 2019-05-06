@@ -1,5 +1,8 @@
 using Autofac.Integration.WebApi;
+using nexrad.api.Models;
+using nexrad.models;
 using nexrad.reader.Level2;
+using System.Collections.Generic;
 using System.Web.Http;
 
 namespace nexrad.api.Controllers
@@ -15,11 +18,27 @@ namespace nexrad.api.Controllers
             _level2RadarReader = level2RadarReader;
         }
 
-        [Route("high-res")]
-        public IHttpActionResult GetHighResReflectivity(string fileName)
+        [HttpGet]
+        [Route("high-resolution-reflectivity")]
+        public IHttpActionResult GetHighResReflectivity(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + fileName);
-            return Ok(data.Count);
+            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
+            if (query.Scan.HasValue == true)
+            {
+                return Ok(data[query.ElevationNumber].RecordMessages[query.Scan.Value].Record.ReflectivityData);
+            }
+            else
+            {
+                var scans = new List<MomentData>();
+
+                for (var i = 0; i < data[query.ElevationNumber].RecordMessages.Count; i++)
+                {
+                    scans.Add(data[query.ElevationNumber].RecordMessages[i].Record.ReflectivityData);
+                }
+
+                return Ok(scans);
+            }
         }
     }
 }
