@@ -27,15 +27,15 @@ namespace nexrad.api.Controllers
 
             if (query.Scan.HasValue == true)
             {
-                return Ok(data[query.ElevationNumber].RecordMessages[query.Scan.Value].Record.ReflectivityData);
+                return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.Value].Record.ReflectivityData);
             }
             else
             {
                 var scans = new List<MomentData>();
 
-                for (var i = 0; i < data[query.ElevationNumber].RecordMessages.Count; i++)
+                for (var i = 0; i < data[query.ElevationNumber - 1].RecordMessages.Count; i++)
                 {
-                    scans.Add(data[query.ElevationNumber].RecordMessages[i].Record.ReflectivityData);
+                    scans.Add(data[query.ElevationNumber - 1].RecordMessages[i].Record.ReflectivityData);
                 }
 
                 return Ok(scans);
@@ -48,7 +48,7 @@ namespace nexrad.api.Controllers
         {
             var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
 
-            return Ok(data[query.ElevationNumber].RecordMessages.Count());
+            return Ok(data[query.ElevationNumber - 1].RecordMessages.Count());
         }
     }
 }
