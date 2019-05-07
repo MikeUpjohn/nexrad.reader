@@ -43,12 +43,71 @@ namespace nexrad.api.Controllers
         }
 
         [HttpGet]
+        [Route("azimuth")]
+        public IHttpActionResult GetAzimuth(RadarQuery query)
+        {
+            if (query.Scan != null)
+            {
+                var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
+                return Ok(data[query.ElevationNumber].RecordMessages[query.Scan.GetValueOrDefault()].Record.Azimuth);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
         [Route("scans")]
         public IHttpActionResult GetScans(RadarQuery query)
         {
             var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
 
             return Ok(data[query.ElevationNumber - 1].RecordMessages.Count());
+        }
+
+        [HttpGet]
+        [Route("high-resolution-velocity")]
+        public IHttpActionResult GetHighResolutionVelocity(RadarQuery query)
+        {
+            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
+            return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.VelocityData);
+        }
+
+        [HttpGet]
+        [Route("high-resolution-spectrum")]
+        public IHttpActionResult GetHighResolutionSpectrum(RadarQuery query)
+        {
+            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
+            return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.SpectrumData);
+        }
+
+        [HttpGet]
+        [Route("high-resolution-differential-reflectivity")]
+        public IHttpActionResult GetHighResolutionDifferentialReflectivity(RadarQuery query)
+        {
+            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
+            return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.ZDRData);
+        }
+
+        [HttpGet]
+        [Route("high-resolution-differential-phase")]
+        public IHttpActionResult GetHighResolutionDifferentialPhase(RadarQuery query)
+        {
+            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
+            return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.PHIData);
+        }
+
+        [HttpGet]
+        [Route("high-resolution-correlation-coefficient")]
+        public IHttpActionResult GetHighResolutionCorrelationCoefficient(RadarQuery query)
+        {
+            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
+            return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.RhoData);
         }
     }
 }
