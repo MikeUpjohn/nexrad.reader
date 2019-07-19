@@ -26,3 +26,9 @@ nexrad\.models/obj/
 nexrad\.utilities/bin/
 
 nexrad\.utilities/obj/
+
+nexrad\.api/bin/
+
+nexrad\.api/obj/
+
+*.user

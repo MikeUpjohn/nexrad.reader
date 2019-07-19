@@ -1,4 +1,6 @@
-﻿namespace nexrad.models
+﻿using System;
+
+namespace nexrad.models
 {
     public class MomentData
     {

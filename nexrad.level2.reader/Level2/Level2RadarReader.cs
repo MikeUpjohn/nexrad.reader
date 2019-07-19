@@ -1,4 +1,7 @@
 ﻿using Autofac;
+using nexrad.models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace nexrad.reader.Level2
 {
@@ -12,10 +15,12 @@ namespace nexrad.reader.Level2
             _level2RecordReader = level2RecordReader;
         }
 
-        public void RunLevel2Radar(string fileName)
+        public List<GroupedMomentData> RunLevel2Radar(string fileName)
         {
             _level2RecordReader.LoadFile(fileName);
             var data = _level2RecordReader.Read();
+
+            return data.ToList();
         }
     }
 }
