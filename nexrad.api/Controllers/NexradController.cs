@@ -19,7 +19,7 @@ namespace nexrad.api.Controllers
             _level2RadarReader = level2RadarReader;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("high-resolution-reflectivity")]
         public IHttpActionResult GetHighResReflectivity(RadarQuery query)
         {
@@ -42,21 +42,32 @@ namespace nexrad.api.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("azimuth")]
         public IHttpActionResult GetAzimuth(RadarQuery query)
         {
+            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+
             if (query.Scan != null)
             {
-                var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
-
                 return Ok(data[query.ElevationNumber].RecordMessages[query.Scan.GetValueOrDefault()].Record.Azimuth);
+            }
+            else
+            {
+                var azimuths = new List<float>();
+
+                for(var i = 0; i < data[query.ElevationNumber - 1].RecordMessages.Count; i++)
+                {
+                    azimuths.Add(data[query.ElevationNumber - 1].RecordMessages[i].Record.Azimuth);
+                }
+
+                return Ok(azimuths);
             }
 
             return BadRequest();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("scans")]
         public IHttpActionResult GetScans(RadarQuery query)
         {
