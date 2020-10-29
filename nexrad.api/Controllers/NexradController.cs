@@ -23,7 +23,7 @@ namespace nexrad.api.Controllers
         [Route("high-resolution-reflectivity")]
         public IHttpActionResult GetHighResReflectivity(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+            var data = _level2RadarReader.RunLevel2Radar("F://NEXRAD Files//" + query.RadarFile);
 
             if (query.Scan.HasValue == true)
             {
@@ -46,7 +46,7 @@ namespace nexrad.api.Controllers
         [Route("azimuth")]
         public IHttpActionResult GetAzimuth(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+            var data = _level2RadarReader.RunLevel2Radar("F://NEXRAD Files//" + query.RadarFile);
 
             if (query.Scan != null)
             {
@@ -71,7 +71,7 @@ namespace nexrad.api.Controllers
         [Route("scans")]
         public IHttpActionResult GetScans(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+            var data = _level2RadarReader.RunLevel2Radar("F://NEXRAD Files//" + query.RadarFile);
 
             return Ok(data[query.ElevationNumber - 1].RecordMessages.Count());
         }
@@ -80,7 +80,7 @@ namespace nexrad.api.Controllers
         [Route("high-resolution-velocity")]
         public IHttpActionResult GetHighResolutionVelocity(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+            var data = _level2RadarReader.RunLevel2Radar("F://NEXRAD Files//" + query.RadarFile);
 
             return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.VelocityData);
         }
@@ -89,7 +89,7 @@ namespace nexrad.api.Controllers
         [Route("high-resolution-spectrum")]
         public IHttpActionResult GetHighResolutionSpectrum(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+            var data = _level2RadarReader.RunLevel2Radar("F://NEXRAD Files//" + query.RadarFile);
 
             return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.SpectrumData);
         }
@@ -98,7 +98,7 @@ namespace nexrad.api.Controllers
         [Route("high-resolution-differential-reflectivity")]
         public IHttpActionResult GetHighResolutionDifferentialReflectivity(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+            var data = _level2RadarReader.RunLevel2Radar("F://NEXRAD Files//" + query.RadarFile);
 
             return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.ZDRData);
         }
@@ -107,7 +107,7 @@ namespace nexrad.api.Controllers
         [Route("high-resolution-differential-phase")]
         public IHttpActionResult GetHighResolutionDifferentialPhase(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+            var data = _level2RadarReader.RunLevel2Radar("F://NEXRAD Files//" + query.RadarFile);
 
             return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.PHIData);
         }
@@ -116,7 +116,7 @@ namespace nexrad.api.Controllers
         [Route("high-resolution-correlation-coefficient")]
         public IHttpActionResult GetHighResolutionCorrelationCoefficient(RadarQuery query)
         {
-            var data = _level2RadarReader.RunLevel2Radar("F://" + query.RadarFile);
+            var data = _level2RadarReader.RunLevel2Radar("F://NEXRAD Files//" + query.RadarFile);
 
             return Ok(data[query.ElevationNumber - 1].RecordMessages[query.Scan.GetValueOrDefault()].Record.RhoData);
         }

@@ -70,7 +70,6 @@
     <Compile Include="Level2\IndividualMessages\Message31Reader.cs" />
     <Compile Include="Level2\IndividualMessages\MessageHeaderReader.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nexrad.models\nexrad.models.csproj">
