@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 namespace nexrad.reader.Level2
 {
@@ -30,7 +31,10 @@ namespace nexrad.reader.Level2
 
         public void LoadFile(string fileName)
         {
-            FileData = File.ReadAllBytes(fileName);
+            using(WebClient client = new WebClient())
+            {
+                FileData = client.DownloadData(fileName);
+            }
         }
 
         public IList<GroupedMomentData> Read()
