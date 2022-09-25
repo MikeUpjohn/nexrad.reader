@@ -1,0 +1,38 @@
+name: NEXRAD Reader - LIVE Environment
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+    - name: Step 1 - Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Step 2 - Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Step 3 - Setup NuGet
+      uses: NuGet/setup-nuget@v1
+
+    - name: Step 4 - Navigate to Workspace
+      run: cd nexrad.api
+
+    - name: Step 5 - Create Build Directory
+      run: mkdir _build
+
+    - name: Step 6 - Restore Packages
+      run: nuget restore nexrad-radar-data-reader.sln
+
+    - name: Step 7 - Build Solution
+      run: |
+        msbuild.exe nexrad-radar-data-reader.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
+    - name: Step 8 - FTP Deploy Files to Server
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      with:
+        server: ${{secrets.SERVER_IP}}
+        username: ${{secrets.FTP_USERNAME}}
+        password: ${{secrets.FTP_PASSWORD}}
+        local-dir: ${{secrets.LOCAL_DIR}}
+        server-dir: ${{secrets.SERVER_DIR}}
