@@ -19,6 +19,27 @@ namespace nexrad.api.Controllers
             _level2RadarReader = level2RadarReader;
         }
 
+        [HttpOptions]
+        [Route("scans")]
+        public IHttpActionResult AmIAliveOptions()
+        {
+            return Ok();
+        }
+
+        [HttpOptions]
+        [Route("high-resolution-reflectivity")]
+        public IHttpActionResult GetHighResReflectivity()
+        {
+            return Ok();
+        }
+
+        [HttpOptions]
+        [Route("azimuth")]
+        public IHttpActionResult GetAzimuth()
+        {
+            return Ok();
+        }
+
         [HttpPost]
         [Route("high-resolution-reflectivity")]
         public IHttpActionResult GetHighResReflectivity(RadarQuery query)
