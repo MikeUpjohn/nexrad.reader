@@ -10,12 +10,6 @@ jobs:
     - name: Step 1 - Checkout repository
       uses: actions/checkout@v2
 
-    - name: Step 2 - Install Chocolatey
-      run: |
-        Set-ExecutionPolicy Bypass -Scope Process -Force
-        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
     - name: Step 3 - Install .NET Framework 4.8.1 Developer Pack
       run: |
         Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2203306" -OutFile "$env:TEMP\\ndp481-devpack-enu.exe"
