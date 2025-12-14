@@ -126,3 +126,4 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: _build/publish/
         server-dir: ${{ secrets.SERVER_DIR }}
+        protocol: ftps
