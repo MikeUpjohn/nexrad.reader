@@ -10,25 +10,34 @@ jobs:
     - name: Step 1 - Checkout repository
       uses: actions/checkout@v2
 
-    - name: Step 2 - Setup MSBuild
+    - name: Step 2 - Install Chocolatey
+      run: |
+        Set-ExecutionPolicy Bypass -Scope Process -Force
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+    - name: Step 3 - Install .NET Framework 4.8.1 Developer Pack
+      run: choco install netfx-4.8.1-devpack -y
+
+    - name: Step 4 - Setup MSBuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Step 3 - Setup NuGet
+    - name: Step 5 - Setup NuGet
       uses: NuGet/setup-nuget@v1
 
-    - name: Step 4 - Navigate to Workspace
+    - name: Step 6 - Navigate to Workspace
       run: cd nexrad.api
 
-    - name: Step 5 - Create Build Directory
+    - name: Step 7 - Create Build Directory
       run: mkdir _build
 
-    - name: Step 6 - Restore Packages
+    - name: Step 8 - Restore Packages
       run: nuget restore nexrad-radar-data-reader.sln
 
-    - name: Step 7 - Build Solution
+    - name: Step 9 - Build Solution
       run: |
         msbuild.exe nexrad-radar-data-reader.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-    - name: Step 8 - FTP Deploy Files to Server
+    - name: Step 10 - FTP Deploy Files to Server
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
         server: ${{secrets.SERVER_IP}}
