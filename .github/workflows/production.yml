@@ -1,19 +1,51 @@
 name: NEXRAD Reader - LIVE Environment
 on:
   push:
-    branches:
-      [ "master", "196-NETUpgrade" ]
+    branches: [ "master", "196-NETUpgrade" ]
+
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-2022
+
     steps:
     - name: Step 1 - Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - name: Step 3 - Install .NET Framework 4.8.1 Developer Pack
+    - name: Step 2 - Ensure Chocolatey available (no-op on GH runners if present)
+      shell: powershell
       run: |
-        Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2203306" -OutFile "$env:TEMP\\ndp481-devpack-enu.exe"
-        Start-Process -FilePath "$env:TEMP\\ndp481-devpack-enu.exe" -ArgumentList "/q" -Wait
+        if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+          Write-Host "Chocolatey not found on runner. This runner should normally have choco."
+        } else {
+          choco --version
+        }
+
+    - name: Step 3 - Install .NET Framework 4.8.1 Developer Pack (choco, fallback to installer)
+      shell: powershell
+      run: |
+        Write-Host "Attempting Chocolatey install of netfx devpack..."
+        $installed = $false
+        try {
+          choco install netfx-4.8.1-devpack -y -r
+          $installed = $true
+        } catch {
+          Write-Warning "choco install failed or package not available; will try direct installer."
+        }
+
+        if (-not $installed) {
+          $installer = "$env:TEMP\ndp481-devpack-enu.exe"
+          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2203306" -OutFile $installer
+          Start-Process -FilePath $installer -ArgumentList "/quiet","/norestart" -Wait
+        }
+
+        $refPath = 'C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1'
+        Write-Host "Checking for reference assemblies at $refPath"
+        if (-not (Test-Path $refPath)) {
+          Write-Error "Developer Pack not found at $refPath. Install failed or runner doesn't allow install."
+          exit 1
+        } else {
+          Get-ChildItem $refPath | Select-Object -First 10
+        }
 
     - name: Step 4 - Setup MSBuild
       uses: microsoft/setup-msbuild@v1
@@ -21,23 +53,40 @@ jobs:
     - name: Step 5 - Setup NuGet
       uses: NuGet/setup-nuget@v1
 
-    - name: Step 6 - Navigate to Workspace
-      run: cd nexrad.api
-
-    - name: Step 7 - Create Build Directory
-      run: mkdir _build
-
-    - name: Step 8 - Restore Packages
-      run: nuget restore nexrad-radar-data-reader.sln
-
-    - name: Step 9 - Build Solution
+    - name: Step 6 - Restore NuGet packages
+      shell: powershell
       run: |
-        msbuild.exe nexrad-radar-data-reader.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
+        nuget restore nexrad-radar-data-reader.sln
+
+    - name: Step 7 - Create Build & Publish folder
+      shell: powershell
+      run: |
+        New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\_build\publish" | Out-Null
+
+    - name: Step 8 - Build & Publish solution (MSBuild)
+      shell: powershell
+      run: |
+        # Ensure we are in repo root
+        Set-Location $env:GITHUB_WORKSPACE
+        # Build & publish to the _build\publish folder
+        msbuild.exe nexrad-radar-data-reader.sln /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU" /p:DeployOnBuild=true /p:WebPublishMethod=FileSystem /p:publishUrl="$env:GITHUB_WORKSPACE\_build\publish" /p:DeleteExistingFiles=True /verbosity:minimal
+
+    - name: Step 9 - Verify published output
+      shell: powershell
+      run: |
+        $pub = "$env:GITHUB_WORKSPACE\_build\publish"
+        if (-not (Test-Path $pub) -or -not (Get-ChildItem $pub -Recurse | Where-Object { -not $_.PSIsContainer } )) {
+          Write-Error "Publish folder is empty: $pub"
+          exit 1
+        }
+        Write-Host "Publish folder contents:"
+        Get-ChildItem $pub -Recurse | Select-Object -First 20
+
     - name: Step 10 - FTP Deploy Files to Server
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        server: ${{secrets.SERVER_IP}}
-        username: ${{secrets.FTP_USERNAME}}
-        password: ${{secrets.FTP_PASSWORD}}
-        local-dir: ${{secrets.LOCAL_DIR}}
-        server-dir: ${{secrets.SERVER_DIR}}
+        server: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: _build/publish
+        server-dir: ${{ secrets.SERVER_DIR }}
