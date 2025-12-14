@@ -69,7 +69,7 @@ jobs:
           /p:DeleteExistingFiles=True `
           /verbosity:minimal
 
-    - name: Step 8 - Fallback: gather artifacts into _build/publish if publish folder empty
+    - name: Step 8 - Fallback
       shell: powershell
       run: |
         $pub = "$env:GITHUB_WORKSPACE\_build\publish"
