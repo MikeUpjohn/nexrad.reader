@@ -15,10 +15,6 @@ jobs:
         Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2203306" -OutFile "$env:TEMP\\ndp481-devpack-enu.exe"
         Start-Process -FilePath "$env:TEMP\\ndp481-devpack-enu.exe" -ArgumentList "/q" -Wait
 
-    - name: Install .NET Framework 4.8.1 Developer Pack
-      run: |
-        choco install netfx-4.8.1-devpack -y
-      shell: pwsh
     - name: Step 4 - Setup MSBuild
       uses: microsoft/setup-msbuild@v1
 
