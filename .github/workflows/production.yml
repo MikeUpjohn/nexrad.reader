@@ -11,76 +11,112 @@ jobs:
     - name: Step 1 - Checkout repository
       uses: actions/checkout@v3
 
-    - name: Step 2 - Ensure Chocolatey available (no-op on GH runners if present)
-      shell: powershell
-      run: |
-        if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
-          Write-Host "Chocolatey not found on runner. This runner should normally have choco."
-        } else {
-          choco --version
-        }
-
-    - name: Step 3 - Install .NET Framework 4.8.1 Developer Pack (choco, fallback to installer)
-      shell: powershell
-      run: |
-        Write-Host "Attempting Chocolatey install of netfx devpack..."
-        $installed = $false
-        try {
-          choco install netfx-4.8.1-devpack -y -r
-          $installed = $true
-        } catch {
-          Write-Warning "choco install failed or package not available; will try direct installer."
-        }
-
-        if (-not $installed) {
-          $installer = "$env:TEMP\ndp481-devpack-enu.exe"
-          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2203306" -OutFile $installer
-          Start-Process -FilePath $installer -ArgumentList "/quiet","/norestart" -Wait
-        }
-
-        $refPath = 'C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1'
-        Write-Host "Checking for reference assemblies at $refPath"
-        if (-not (Test-Path $refPath)) {
-          Write-Error "Developer Pack not found at $refPath. Install failed or runner doesn't allow install."
-          exit 1
-        } else {
-          Get-ChildItem $refPath | Select-Object -First 10
-        }
-
-    - name: Step 4 - Setup MSBuild
+    - name: Step 2 - Setup MSBuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Step 5 - Setup NuGet
+    - name: Step 3 - Setup NuGet
       uses: NuGet/setup-nuget@v1
 
-    - name: Step 6 - Restore NuGet packages
+    - name: Step 4 - Ensure .NET Framework 4.8.1 Developer Pack present (best-effort)
+      shell: powershell
+      run: |
+        $refPath = 'C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1'
+        if (Test-Path $refPath) {
+          Write-Host "Developer Pack already present."
+          exit 0
+        }
+        Write-Host "Attempting to install .NET Framework 4.8.1 Developer Pack via Chocolatey..."
+        try {
+          choco install netfx-4.8.1-devpack -y -r
+        } catch {
+          Write-Warning "choco install failed or package not available; attempting direct download."
+        }
+        if (-not (Test-Path $refPath)) {
+          $installer = "$env:TEMP\ndp481-devpack-enu.exe"
+          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2203306" -OutFile $installer -UseBasicParsing
+          Write-Host "Running devpack installer (may require elevated privileges)..."
+          Start-Process -FilePath $installer -ArgumentList "/quiet","/norestart" -Wait
+        }
+        if (-not (Test-Path $refPath)) {
+          Write-Error "Developer Pack not found at $refPath. Hosted runner may prevent installation. Use a self-hosted runner with the Developer Pack preinstalled."
+          exit 1
+        }
+        Write-Host "Developer Pack installed."
+
+    - name: Step 5 - Restore NuGet packages
       shell: powershell
       run: |
         nuget restore nexrad-radar-data-reader.sln
 
-    - name: Step 7 - Create Build & Publish folder
+    - name: Step 6 - Create Build & Publish folder
       shell: powershell
       run: |
         New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\_build\publish" | Out-Null
 
-    - name: Step 8 - Build & Publish solution (MSBuild)
+    - name: Step 7 - Build & Publish solution (MSBuild)
       shell: powershell
       run: |
-        # Ensure we are in repo root
         Set-Location $env:GITHUB_WORKSPACE
-        # Build & publish to the _build\publish folder
-        msbuild.exe nexrad-radar-data-reader.sln /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU" /p:DeployOnBuild=true /p:WebPublishMethod=FileSystem /p:publishUrl="$env:GITHUB_WORKSPACE\_build\publish" /p:DeleteExistingFiles=True /verbosity:minimal
+        # Explicitly invoke WebPublish to FileSystem to publish into _build\publish
+        msbuild.exe nexrad-radar-data-reader.sln `
+          /t:Rebuild `
+          /p:Configuration=Release `
+          /p:Platform="Any CPU" `
+          /p:DeployOnBuild=true `
+          /p:DeployDefaultTarget=WebPublish `
+          /p:WebPublishMethod=FileSystem `
+          /p:PublishUrl="$env:GITHUB_WORKSPACE\_build\publish" `
+          /p:DeleteExistingFiles=True `
+          /verbosity:minimal
+
+    - name: Step 8 - Fallback: gather artifacts into _build/publish if publish folder empty
+      shell: powershell
+      run: |
+        $pub = "$env:GITHUB_WORKSPACE\_build\publish"
+        if ((Test-Path $pub) -and (Get-ChildItem $pub -Recurse | Where-Object { -not $_.PSIsContainer })) {
+          Write-Host "Publish folder contains files; no fallback required."
+          exit 0
+        }
+        Write-Host "Publish folder is empty. Searching for published/package outputs and copying them to _build/publish..."
+        $candidates = @(
+          Join-Path $env:GITHUB_WORKSPACE "nexrad.api\obj\Release\Package\PackageTmp"
+          Join-Path $env:GITHUB_WORKSPACE "nexrad.api\obj\Release\Package"
+          Join-Path $env:GITHUB_WORKSPACE "nexrad.api\bin\Release"
+          Join-Path $env:GITHUB_WORKSPACE "nexrad.reader\bin\Release"
+          Join-Path $env:GITHUB_WORKSPACE "_published"   # any other custom folders
+        )
+        $copied = $false
+        foreach ($p in $candidates) {
+          if (Test-Path $p) {
+            Write-Host "Copying from $p to $pub"
+            robocopy $p $pub /MIR /NFL /NDL /NJH /NJS | Out-Null
+            $copied = $true
+            break
+          }
+        }
+        if (-not $copied) {
+          # Generic search for PackageTmp or publish output
+          $found = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -ErrorAction SilentlyContinue |
+                   Where-Object { $_.FullName -match 'PackageTmp|publish|_PublishedWebsites|obj\\Release\\Package' } |
+                   Select-Object -First 1
+          if ($found) {
+            $src = $found.FullName
+            Write-Host "Found candidate publish folder: $src"
+            robocopy $src $pub /MIR /NFL /NDL /NJH /NJS | Out-Null
+            $copied = $true
+          }
+        }
+        if (-not $copied) {
+          Write-Error "Could not locate any publish/package outputs to populate _build/publish. Please inspect build logs; check msbuild publish parameters or run on a runner with Developer Pack installed."
+          exit 1
+        }
 
     - name: Step 9 - Verify published output
       shell: powershell
       run: |
         $pub = "$env:GITHUB_WORKSPACE\_build\publish"
-        if (-not (Test-Path $pub) -or -not (Get-ChildItem $pub -Recurse | Where-Object { -not $_.PSIsContainer } )) {
-          Write-Error "Publish folder is empty: $pub"
-          exit 1
-        }
         Write-Host "Publish folder contents:"
-        Get-ChildItem $pub -Recurse | Select-Object -First 20
+        Get-ChildItem $pub -Recurse | Select-Object -First 50
 
     - name: Step 10 - FTP Deploy Files to Server
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
