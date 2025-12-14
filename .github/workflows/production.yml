@@ -17,7 +17,9 @@ jobs:
         iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
     - name: Step 3 - Install .NET Framework 4.8.1 Developer Pack
-      run: choco install netfx-4.8.1-devpack -y
+      run: |
+        Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/9e71414b-954f-44dc-965f-053322425c05/2c1f0244090f9046b8a0d8d236c80bc5/ndp481-devpack-enu.exe" -OutFile "$env:TEMP\\ndp481-devpack-enu.exe"
+        Start-Process -FilePath "$env:TEMP\\ndp481-devpack-enu.exe" -ArgumentList "/q" -Wait
 
     - name: Step 4 - Setup MSBuild
       uses: microsoft/setup-msbuild@v1
