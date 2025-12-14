@@ -2,7 +2,7 @@ name: NEXRAD Reader - LIVE Environment
 on:
   push:
     branches:
-      - [ "master", "196-NETUpgrade" ]
+      [ "master", "196-NETUpgrade" ]
 jobs:
   build:
     runs-on: windows-2019
