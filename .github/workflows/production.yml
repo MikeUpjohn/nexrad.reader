@@ -127,3 +127,4 @@ jobs:
         local-dir: _build/publish/
         server-dir: ${{ secrets.SERVER_DIR }}
         protocol: ftps
+        passive: true
