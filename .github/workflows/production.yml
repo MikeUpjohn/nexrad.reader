@@ -1,14 +1,15 @@
-name: NEXRAD Reader - LIVE Environment
+name: NEXRAD API - LIVE Environment
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
+
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-2022
+
     steps:
     - name: Step 1 - Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Step 2 - Setup MSBuild
       uses: microsoft/setup-msbuild@v1
@@ -16,23 +17,88 @@ jobs:
     - name: Step 3 - Setup NuGet
       uses: NuGet/setup-nuget@v1
 
-    - name: Step 4 - Navigate to Workspace
-      run: cd nexrad.api
-
-    - name: Step 5 - Create Build Directory
-      run: mkdir _build
-
-    - name: Step 6 - Restore Packages
-      run: nuget restore nexrad-radar-data-reader.sln
-
-    - name: Step 7 - Build Solution
+    - name: Step 4 - Restore NuGet packages
+      shell: powershell
       run: |
-        msbuild.exe nexrad-radar-data-reader.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-    - name: Step 8 - FTP Deploy Files to Server
+        nuget restore nexrad-radar-data-reader.sln
+
+    - name: Step 5 - Create Build & Publish folder
+      shell: powershell
+      run: |
+        New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\_build\publish" | Out-Null
+
+    - name: Step 6 - Build & Publish solution (MSBuild)
+      shell: powershell
+      run: |
+        Set-Location $env:GITHUB_WORKSPACE
+        # Explicitly invoke WebPublish to FileSystem to publish into _build\publish
+        msbuild.exe nexrad-radar-data-reader.sln `
+          /t:Rebuild `
+          /p:Configuration=Release `
+          /p:Platform="Any CPU" `
+          /p:DeployOnBuild=true `
+          /p:DeployDefaultTarget=WebPublish `
+          /p:WebPublishMethod=FileSystem `
+          /p:PublishUrl="$env:GITHUB_WORKSPACE\_build\publish" `
+          /p:DeleteExistingFiles=True `
+          /verbosity:minimal
+
+    - name: Step 7 - Fallback
+      shell: powershell
+      run: |
+        $pub = "$env:GITHUB_WORKSPACE\_build\publish"
+        if ((Test-Path $pub) -and (Get-ChildItem $pub -Recurse | Where-Object { -not $_.PSIsContainer })) {
+          Write-Host "Publish folder contains files; no fallback required."
+          exit 0
+        }
+        Write-Host "Publish folder is empty. Searching for published/package outputs and copying them to _build/publish..."
+        $candidates = @(
+          Join-Path $env:GITHUB_WORKSPACE "nexrad.api\obj\Release\Package\PackageTmp"
+          Join-Path $env:GITHUB_WORKSPACE "nexrad.api\obj\Release\Package"
+          Join-Path $env:GITHUB_WORKSPACE "nexrad.api\bin\Release"
+          Join-Path $env:GITHUB_WORKSPACE "nexrad.reader\bin\Release"
+          Join-Path $env:GITHUB_WORKSPACE "_published"   # any other custom folders
+        )
+        $copied = $false
+        foreach ($p in $candidates) {
+          if (Test-Path $p) {
+            Write-Host "Copying from $p to $pub"
+            robocopy $p $pub /MIR /NFL /NDL /NJH /NJS | Out-Null
+            $copied = $true
+            break
+          }
+        }
+        if (-not $copied) {
+          # Generic search for PackageTmp or publish output
+          $found = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -ErrorAction SilentlyContinue |
+                   Where-Object { $_.FullName -match 'PackageTmp|publish|_PublishedWebsites|obj\\Release\\Package' } |
+                   Select-Object -First 1
+          if ($found) {
+            $src = $found.FullName
+            Write-Host "Found candidate publish folder: $src"
+            robocopy $src $pub /MIR /NFL /NDL /NJH /NJS | Out-Null
+            $copied = $true
+          }
+        }
+        if (-not $copied) {
+          Write-Error "Could not locate any publish/package outputs to populate _build/publish. Please inspect build logs; check msbuild publish parameters or run on a runner with Developer Pack installed."
+          exit 1
+        }
+
+    - name: Step 8 - Verify published output
+      shell: powershell
+      run: |
+        $pub = "$env:GITHUB_WORKSPACE\_build\publish"
+        Write-Host "Publish folder contents:"
+        Get-ChildItem $pub -Recurse | Select-Object -First 50
+
+    - name: Step 9 - FTP Deploy Files to Server
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        server: ${{secrets.SERVER_IP}}
-        username: ${{secrets.FTP_USERNAME}}
-        password: ${{secrets.FTP_PASSWORD}}
-        local-dir: ${{secrets.LOCAL_DIR}}
-        server-dir: ${{secrets.SERVER_DIR}}
+        server: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ${{ secrets.LOCAL_DIR }}
+        server-dir: ${{ secrets.SERVER_DIR }}
+        protocol: ftps
+        passive: true
