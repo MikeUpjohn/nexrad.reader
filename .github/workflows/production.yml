@@ -1,4 +1,4 @@
-name: NEXRAD Reader - LIVE Environment
+name: NEXRAD API - LIVE Environment
 on:
   push:
     branches: [ "master", "196-NETUpgrade" ]
@@ -16,32 +16,6 @@ jobs:
 
     - name: Step 3 - Setup NuGet
       uses: NuGet/setup-nuget@v1
-
-    - name: Step 4 - Ensure .NET Framework 4.8.1 Developer Pack present (best-effort)
-      shell: powershell
-      run: |
-        $refPath = 'C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1'
-        if (Test-Path $refPath) {
-          Write-Host "Developer Pack already present."
-          exit 0
-        }
-        Write-Host "Attempting to install .NET Framework 4.8.1 Developer Pack via Chocolatey..."
-        try {
-          choco install netfx-4.8.1-devpack -y -r
-        } catch {
-          Write-Warning "choco install failed or package not available; attempting direct download."
-        }
-        if (-not (Test-Path $refPath)) {
-          $installer = "$env:TEMP\ndp481-devpack-enu.exe"
-          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2203306" -OutFile $installer -UseBasicParsing
-          Write-Host "Running devpack installer (may require elevated privileges)..."
-          Start-Process -FilePath $installer -ArgumentList "/quiet","/norestart" -Wait
-        }
-        if (-not (Test-Path $refPath)) {
-          Write-Error "Developer Pack not found at $refPath. Hosted runner may prevent installation. Use a self-hosted runner with the Developer Pack preinstalled."
-          exit 1
-        }
-        Write-Host "Developer Pack installed."
 
     - name: Step 5 - Restore NuGet packages
       shell: powershell
