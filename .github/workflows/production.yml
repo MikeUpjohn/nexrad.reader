@@ -121,10 +121,10 @@ jobs:
     - name: Step 10 - FTP Deploy Files to Server
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        server: admin.confessions-of-a-storm-geek.co.uk
-        username: nexrad-api-ftp
-        password: 211Uf$srhv4N
-        local-dir: _build/publish/
-        server-dir: /
+        server: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ${{ secrets.LOCAL_DIR }}
+        server-dir: ${{ secrets.SERVER_DIR }}
         protocol: ftps
         passive: true
