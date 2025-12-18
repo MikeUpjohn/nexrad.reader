@@ -17,17 +17,17 @@ jobs:
     - name: Step 3 - Setup NuGet
       uses: NuGet/setup-nuget@v1
 
-    - name: Step 5 - Restore NuGet packages
+    - name: Step 4 - Restore NuGet packages
       shell: powershell
       run: |
         nuget restore nexrad-radar-data-reader.sln
 
-    - name: Step 6 - Create Build & Publish folder
+    - name: Step 5 - Create Build & Publish folder
       shell: powershell
       run: |
         New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\_build\publish" | Out-Null
 
-    - name: Step 7 - Build & Publish solution (MSBuild)
+    - name: Step 6 - Build & Publish solution (MSBuild)
       shell: powershell
       run: |
         Set-Location $env:GITHUB_WORKSPACE
@@ -43,7 +43,7 @@ jobs:
           /p:DeleteExistingFiles=True `
           /verbosity:minimal
 
-    - name: Step 8 - Fallback
+    - name: Step 7 - Fallback
       shell: powershell
       run: |
         $pub = "$env:GITHUB_WORKSPACE\_build\publish"
@@ -85,14 +85,14 @@ jobs:
           exit 1
         }
 
-    - name: Step 9 - Verify published output
+    - name: Step 8 - Verify published output
       shell: powershell
       run: |
         $pub = "$env:GITHUB_WORKSPACE\_build\publish"
         Write-Host "Publish folder contents:"
         Get-ChildItem $pub -Recurse | Select-Object -First 50
 
-    - name: Step 10 - FTP Deploy Files to Server
+    - name: Step 9 - FTP Deploy Files to Server
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
         server: ${{ secrets.SERVER_IP }}
