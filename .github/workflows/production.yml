@@ -1,7 +1,7 @@
 name: NEXRAD API - LIVE Environment
 on:
   push:
-    branches: [ "master", "196-NETUpgrade" ]
+    branches: [ "master" ]
 
 jobs:
   build:
