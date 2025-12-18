@@ -125,6 +125,6 @@ jobs:
         username: nexrad-api-ftp
         password: 211Uf$srhv4N
         local-dir: _build/publish/
-        server-dir: ${{ secrets.SERVER_DIR }}
+        server-dir: /
         protocol: ftps
         passive: true
