@@ -5,10 +5,10 @@ using nexrad.models;
 using nexrad.reader.Level2;
 
 namespace nexrad.web.Controllers {
-    public class HomeController : Controller {
+    public class NexradController : Controller {
         private readonly ILevel2RadarReader _level2RadarReader;
 
-        public HomeController(ILevel2RadarReader level2RadarReader)
+        public NexradController(ILevel2RadarReader level2RadarReader)
         {
             _level2RadarReader = level2RadarReader;
         }
@@ -18,7 +18,7 @@ namespace nexrad.web.Controllers {
         }
 
         [HttpPost]
-        public JsonResult GetData(RadarQuery query) {
+        public JsonResult LoadRadarFile(RadarQuery query) {
             var data = _level2RadarReader.RunLevel2Radar("https://nexrad-reader-files.s3.eu-west-1.amazonaws.com/" + query.RadarFile);
 
             if (query.Scan.HasValue == true)
