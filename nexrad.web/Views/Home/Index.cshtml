@@ -3,18 +3,38 @@
 }
 
 <main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
-
-    <div class="row">
-        <button id="run-radar-loop"></button>
-        <canvas id="map"></canvas>
+    <div class="row p-2 justify-content-lg-center">
+        <div class="col-lg-4">
+            <select class="form-control" id="radar-file">
+                <option>Please Select</option>
+                <option value="KLTX_202512011937z">KLTX_202512011937z</option>
+                <option value="KLTX_202512011937z">KLTX_202512011937z</option>
+                <option value="KLTX_202512011937z">KLTX_202512011937z</option>
+                <option value="KLTX_202512011937z">KLTX_202512011937z</option>
+            </select>
+        </div>
+        <div class="col-lg-1">
+            <button id="run-radar-loop" class="btn btn-light">Run!</button>
+        </div>
+    </div>
+    <div class="row p-2">
+        <div class="col-lg-auto main-canvas-container">
+            <canvas class="main-canvas" id="main-canvas"></canvas>
+        </div>
     </div>
 </main>
+<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        @*<img src="..." class="rounded me-2" alt="...">*@
+        <strong class="me-auto">NEXRAD Web Plotter</strong>
+        <small>Just now...</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        
+    </div>
+</div>
 
 @section scripts {
-    <script type="text/javascript" src="~/Content/radar-reader.js"></script>
+    <script type="text/javascript" src="~/Scripts/radar-reader.js"></script>
 }

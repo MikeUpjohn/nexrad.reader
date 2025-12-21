@@ -17,8 +17,9 @@ namespace nexrad.web.Controllers {
             return View();
         }
 
+        [HttpPost]
         public JsonResult GetData(RadarQuery query) {
-            var data = _level2RadarReader.RunLevel2Radar("https://www.confessions-of-a-storm-geek.co.uk/" + query.RadarFile + ".txt");
+            var data = _level2RadarReader.RunLevel2Radar("https://nexrad-reader-files.s3.eu-west-1.amazonaws.com/" + query.RadarFile);
 
             if (query.Scan.HasValue == true)
             {
@@ -33,7 +34,10 @@ namespace nexrad.web.Controllers {
                     scans.Add(data[query.ElevationNumber - 1].RecordMessages[i].Record.ReflectivityData);
                 }
 
-                return Json(scans);
+                var json = Json(scans, JsonRequestBehavior.AllowGet);
+                json.MaxJsonLength = int.MaxValue;
+
+                return json;
             }
         }
     }
