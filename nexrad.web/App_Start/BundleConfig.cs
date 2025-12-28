@@ -19,6 +19,12 @@ namespace nexrad.web {
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
+            bundles.Add(new Bundle("~/bundles/threejs").Include(
+                "~/Scripts/three.js"));
+
+            bundles.Add(new Bundle("~/bundles/d3js").Include(
+                "~/Scripts/d3.v7.min.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
