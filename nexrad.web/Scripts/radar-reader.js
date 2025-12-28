@@ -46,7 +46,7 @@ nexrad.reader = (function () {
             'ElevationNumber': 1
         };
 
-        const response = await fetch('/Nexrad/LoadFileData', {
+        const response = await fetch('/Nexrad/LoadRadarFile', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
