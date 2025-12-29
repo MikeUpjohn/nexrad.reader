@@ -6,6 +6,7 @@ const nexrad = {
 };
 
 nexrad.reader = (function () {
+    let bootstrapToast;
     let message;
 
     const selectors = {
@@ -14,6 +15,9 @@ nexrad.reader = (function () {
     };
 
     const init = () => {
+        const toast = document.querySelector('#toast-message')
+        bootstrapToast = new bootstrap.Toast(toast);
+
         message = '';
 
         setupLoadFileHandler();
@@ -39,7 +43,7 @@ nexrad.reader = (function () {
         }
 
         message = `Retrieving and loading file data for ${selectedMenuItem}`;
-        nexrad.ui.updateToastMessage(message);
+        nexrad.ui.updateToastMessage(bootstrapToast, message);
 
         const query = {
             'RadarFile': 'KTLX20130520_200356_V06',
@@ -53,8 +57,6 @@ nexrad.reader = (function () {
             },
             body: JSON.stringify(query)
         });
-
-        console.log(await response.json());
     };
 
     return {
@@ -64,17 +66,17 @@ nexrad.reader = (function () {
 
 nexrad.ui = (function () {
     const selectors = {
-        message: '#message'
+        toastBody: '.toast-body',
+        toastMessage: '#toast-message'
     };
 
-    const updateToastMessage = message => {
-        const toastMessage = document.getElementById(selectors.message);
-        if (!toastMessage) {
+    const updateToastMessage = (bootstrapToast, message) => {
+        if (!bootstrapToast) {
             return;
         }
 
-        toastMessage.querySelector(selectors.toastBody).innerHtml = message;
-        toastMessage.style.display = 'block';
+        bootstrapToast._element.querySelector(selectors.toastBody).innerText = message;
+        bootstrapToast.show();
     };
 
     return {
