@@ -8,8 +8,7 @@ namespace nexrad.web.Controllers {
     public class NexradController : Controller {
         private readonly ILevel2RadarReader _level2RadarReader;
 
-        public NexradController(ILevel2RadarReader level2RadarReader)
-        {
+        public NexradController(ILevel2RadarReader level2RadarReader) {
             _level2RadarReader = level2RadarReader;
         }
 
@@ -18,19 +17,15 @@ namespace nexrad.web.Controllers {
         }
 
         [HttpPost]
-        public JsonResult LoadRadarFile(RadarQuery query) {
+        public JsonResult GetReflectivityData(RadarQuery query) {
             var data = _level2RadarReader.RunLevel2Radar("https://nexrad-reader-files.s3.eu-west-1.amazonaws.com/" + query.RadarFile);
 
-            if (query.Scan.HasValue == true)
-            {
+            if (query.Scan.HasValue == true) {
                 return Json(data[query.ElevationNumber - 1].RecordMessages[query.Scan.Value].Record.ReflectivityData);
-            }
-            else
-            {
+            } else {
                 var scans = new List<MomentData>();
 
-                for (var i = 0; i < data[query.ElevationNumber - 1].RecordMessages.Count; i++)
-                {
+                for (var i = 0; i < data[query.ElevationNumber - 1].RecordMessages.Count; i++) {
                     scans.Add(data[query.ElevationNumber - 1].RecordMessages[i].Record.ReflectivityData);
                 }
 
@@ -38,6 +33,23 @@ namespace nexrad.web.Controllers {
                 json.MaxJsonLength = int.MaxValue;
 
                 return json;
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GetAzimuthData(RadarQuery query) {
+            var data = _level2RadarReader.RunLevel2Radar("https://nexrad-reader-files.s3.eu-west-1.amazonaws.com/" + query.RadarFile);
+
+            if (query.Scan != null) {
+                return Json(data[query.ElevationNumber].RecordMessages[query.Scan.GetValueOrDefault()].Record.Azimuth);
+            } else {
+                var azimuths = new List<float>();
+
+                for (var i = 0; i < data[query.ElevationNumber - 1].RecordMessages.Count; i++) {
+                    azimuths.Add(data[query.ElevationNumber - 1].RecordMessages[i].Record.Azimuth);
+                }
+
+                return Json(azimuths);
             }
         }
     }

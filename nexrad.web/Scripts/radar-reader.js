@@ -1,13 +1,17 @@
 ﻿window.addEventListener('DOMContentLoaded', function () {
     nexrad.reader.init();
+    nexrad.ui.init();
 });
 
 const nexrad = {
 };
 
+nexrad.reader = {};
+nexrad.ui = {};
+nexrad.renderer = {};
+
 nexrad.reader = (function () {
-    let bootstrapToast;
-    let message;
+    let loadFileButton;
 
     const selectors = {
         radarFile: '#radar-file',
@@ -15,10 +19,7 @@ nexrad.reader = (function () {
     };
 
     const init = () => {
-        const toast = document.querySelector('#toast-message')
-        bootstrapToast = new bootstrap.Toast(toast);
-
-        message = '';
+        loadFileButton = document.querySelector(selectors.runRadarLoop);
 
         setupLoadFileHandler();
     };
@@ -34,7 +35,6 @@ nexrad.reader = (function () {
     };
 
     const handleLoadFile = async () => {
-        const loadFileButton = document.querySelector(selectors.runRadarLoop);
         loadFileButton.setAttribute('disabled', 'disabled');
 
         const selectedMenuItem = document.querySelector(selectors.radarFile).value;
@@ -43,34 +43,95 @@ nexrad.reader = (function () {
         }
 
         message = `Retrieving and loading file data for ${selectedMenuItem}`;
-        nexrad.ui.updateToastMessage(bootstrapToast, message);
+        nexrad.ui.updateToastMessage(message);
 
-        const query = {
+        const request = {
             'RadarFile': 'KTLX20130520_200356_V06',
             'ElevationNumber': 1
         };
 
-        const response = await fetch('/Nexrad/LoadRadarFile', {
+        // Always required to run
+        const azimuthData = await nexrad.renderer.azimuth.loadAzimuthData(request);
+
+        // this will change later to render something based off the dropdown list of options (reflectivity, velocity etc.)
+        const reflectivityData = await nexrad.renderer.reflectivity.loadReflectivityData(request);
+
+        nexrad.renderer.reflectivity.drawReflectivity(reflectivityData, azimuthData);
+
+        nexrad.ui.disableElement(loadFileButton);
+    };
+
+    return {
+        init,
+        loadFileButton
+    };
+})();
+
+nexrad.renderer.reflectivity = (function () {
+    const loadReflectivityData = async (request) => {
+        const response = await fetch('/Nexrad/GetReflectivityData', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(query)
+            body: JSON.stringify(request)
         });
+
+        const data = await response.json();
+        message = `File scan completed and ${data.length} reflectivity records were found`;
+        nexrad.ui.updateToastMessage(message);
+
+        return data;
+    };
+
+    const drawReflectivity = (reflectivityData, azimuthData) => {
+        
     };
 
     return {
-        init
+        loadReflectivityData,
+        drawReflectivity
+    }
+})();
+
+nexrad.renderer.azimuth = (function () {
+    const loadAzimuthData = async (request) => {
+        const response = await fetch('/Nexrad/GetAzimuthData', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request)
+        });
+
+        const data = await response.json();
+        message = `File scan completed and ${data.length} Azimuth data records were found`;
+        nexrad.ui.updateToastMessage(message);
+
+        return data;
+    };
+
+    return {
+        loadAzimuthData
     };
 })();
 
 nexrad.ui = (function () {
+    let bootstrapToast;
+    let toast;
+
     const selectors = {
         toastBody: '.toast-body',
         toastMessage: '#toast-message'
     };
 
-    const updateToastMessage = (bootstrapToast, message) => {
+    const init = () => {
+        toast = document.querySelector(selectors.toastMessage);
+        bootstrapToast = new bootstrap.Toast(toast);
+        message = '';
+    };
+
+    const updateToastMessage = message => {
         if (!bootstrapToast) {
             return;
         }
@@ -79,7 +140,17 @@ nexrad.ui = (function () {
         bootstrapToast.show();
     };
 
+    const disableElement = element => {
+        if (!element) {
+            return;
+        }
+
+        element.setAttribute('disabled', 'disabled');
+    }
+
     return {
-        updateToastMessage
+        init,
+        updateToastMessage,
+        disableElement
     };
 })();
