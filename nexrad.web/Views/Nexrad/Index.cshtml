@@ -2,7 +2,8 @@
     ViewBag.Title = "NEXRAD Viewer";
 }
 
-<main>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="radar-selector" aria-labelledby="radar-selector-label">
+    <h5 id="radar-selector-label">Radar selector</h5>
     <div class="row p-2 justify-content-lg-center">
         <div class="col-lg-4">
             <select class="form-control" id="radar-file">
@@ -16,10 +17,9 @@
     </div>
     <div class="row p-2">
         <div class="col-lg-auto main-canvas-container">
-            @*<canvas class="main-canvas" id="main-canvas"></canvas>*@
         </div>
     </div>
-</main>
+</div>
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="toast-message" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
