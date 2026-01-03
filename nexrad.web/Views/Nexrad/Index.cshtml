@@ -8,9 +8,6 @@
             <select class="form-control" id="radar-file">
                 <option>Please Select</option>
                 <option value="KLTX_202512011937z">KLTX_202512011937z</option>
-                <option value="KLTX_202512011937z">KLTX_202512011937z</option>
-                <option value="KLTX_202512011937z">KLTX_202512011937z</option>
-                <option value="KLTX_202512011937z">KLTX_202512011937z</option>
             </select>
         </div>
         <div class="col-lg-1">
@@ -23,16 +20,6 @@
         </div>
     </div>
 </main>
-@*<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="toast-message">
-    <div class="toast-header">
-        <strong class="me-auto">NEXRAD Web Plotter</strong>
-        <small>Just now...</small>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-    <div class="toast-body">
-        
-    </div>
-</div>*@
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="toast-message" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
@@ -46,5 +33,6 @@
 </div>
 
 @section scripts {
+    <script type="text/javascript" src="~/Scripts/math.js"></script>
     <script type="text/javascript" src="~/Scripts/radar-reader.js"></script>
 }
