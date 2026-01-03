@@ -1,6 +1,7 @@
 ﻿window.addEventListener('DOMContentLoaded', function () {
     nexrad.reader.init();
     nexrad.ui.init();
+    nexrad.renderer.reflectivity.init();
 });
 
 const nexrad = {
@@ -73,8 +74,11 @@ nexrad.renderer.reflectivity = (function () {
     const reflectivityColourSet = [0x000000, 0x9C9C9C, 0x767676, 0xFFAAAA, 0xEE8C8C, 0xC97070, 0x00FB90, 0x00BB00, 0xFFFF70, 0xD0D060, 0xFF6060, 0xDA0000, 0xAE0000, 0x0000FF, 0xFFFFFF, 0xE700FF];
 
     const init = () => {
+        scene = new THREE.Scene();
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
+        cameraPosition = 100;
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
         document.body.append(renderer.domElement);
 
@@ -102,10 +106,6 @@ nexrad.renderer.reflectivity = (function () {
             return;
         }
 
-        let renderer;
-        const cameraPosition = 100;
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const scene = new THREE.Scene();
 
         const scans = azimuthData.length;
         const reflectivityColourScale = d3.scaleQuantize().domain([-32.0, 94.5]).range(reflectivityColourSet);
@@ -149,19 +149,19 @@ nexrad.renderer.reflectivity = (function () {
                 const threePointsMaterial = new THREE.PointsMaterial({
                     size: 2,
                     vertexColors: true,
-                    sizeAttentuation: false
+                    sizeAttenuation: false
                 });
 
                 const geometry = new THREE.BufferGeometry();
                 const pointsGraph = [];
                 const coloursGraph = [];
 
-                dataSet.x.forEach(function (index, value) {
-                    if (reflectivity.MomentDataValues[i] > -33) {
-                        const dataPointColour = new THREE.Color(reflectivityColourScale(reflectivity.MomentDataValues[i]));
+                dataSet.x.forEach(function (value, index) {
+                    if (reflectivity.MomentDataValues[index] > -33) {
+                        const dataPointColour = new THREE.Color(reflectivityColourScale(reflectivity.MomentDataValues[index]));
 
-                        pointGraph.push(dataset.x[i], dataset.y[i], 0);
-                        colourGraph.push(dataPointColour.r, dataPointColour.g, dataPointColour.b);
+                        pointsGraph.push(dataSet.x[index], dataSet.y[index], 0);
+                        coloursGraph.push(dataPointColour.r, dataPointColour.g, dataPointColour.b);
                     }
                 });
 
@@ -185,6 +185,7 @@ nexrad.renderer.reflectivity = (function () {
     };
 
     return {
+        init,
         loadReflectivityData,
         drawReflectivity
     }
