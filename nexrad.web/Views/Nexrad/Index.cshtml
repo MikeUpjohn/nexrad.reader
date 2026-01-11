@@ -3,20 +3,25 @@
 }
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="radar-selector" aria-labelledby="radar-selector-label">
-    <h5 id="radar-selector-label">Radar selector</h5>
-    <div class="row p-2 justify-content-lg-center">
-        <div class="col-lg-4">
-            <select class="form-control" id="radar-file">
-                <option>Please Select</option>
-                <option value="KLTX_202512011937z">KLTX_202512011937z</option>
-            </select>
-        </div>
-        <div class="col-lg-1">
-            <button id="run-radar-loop" class="btn btn-light">Run!</button>
-        </div>
+    <div class="offcanvas-header">
+        <h5 id="radar-selector-label">Radar selector</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="row p-2">
-        <div class="col-lg-auto main-canvas-container">
+    <div class="offcanvas-body">
+        <div class="row p-2 justify-content-lg-center">
+            <div class="col-lg-4">
+                <select class="form-control" id="radar-file">
+                    <option>Please Select</option>
+                    <option value="KLTX_202512011937z">KLTX_202512011937z</option>
+                </select>
+            </div>
+            <div class="col-lg-1">
+                <button id="run-radar-loop" class="btn btn-light">Run!</button>
+            </div>
+        </div>
+        <div class="row p-2">
+            <div class="col-lg-auto main-canvas-container">
+            </div>
         </div>
     </div>
 </div>

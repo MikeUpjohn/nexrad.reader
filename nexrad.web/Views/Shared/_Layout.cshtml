@@ -10,8 +10,8 @@
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container w-100">
-            <a data-bs-toggle="offcanvas" href="#radar-selector" role="link" aria-controls="radar-selector">Change Radar View</a>
             @Html.ActionLink("NEXRAD Web Viewer", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <a class="navbar-brand" data-bs-toggle="offcanvas" href="#radar-selector" role="link" aria-controls="radar-selector">Change Radar View</a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -19,7 +19,6 @@
         </div>
     </nav>
     @RenderBody()
-
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
