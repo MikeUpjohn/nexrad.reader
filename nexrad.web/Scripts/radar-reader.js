@@ -48,7 +48,7 @@ nexrad.reader = (function () {
 
         const request = {
             'RadarFile': 'KTLX20130520_200356_V06',
-            'ElevationNumber': 1
+            'ElevationNumber': 3
         };
 
         // Always required to run
