@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "NEXRAD Viewer";
+}
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="radar-selector" aria-labelledby="radar-selector-label">
+    <div class="offcanvas-header">
+        <h5 id="radar-selector-label">Radar selector</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row p-2 justify-content-lg-center">
+            <div class="col-lg-12">
+                <label for="radar-file">Select Radar File:</label>
+                <select class="form-control" id="radar-file">
+                    <option>Please Select</option>
+                    <option value="KTLX20130520_200356_V06">KTLX 20.05.2013 2003z (Moore EF5 Tornado)</option>
+                </select>
+            </div>
+            </div>
+        <div class="row p-2 justify-content-lg-center">
+            <div class="col-lg-12">
+                <button id="run-radar-loop" class="btn btn-light d-flex justify-content-center w-100">Run!</button>
+            </div>
+        </div>
+        <div class="row p-2">
+            <div class="col-lg-auto main-canvas-container">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toast-message" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">NEXRAD Web Plotter</strong>
+            <small>Just now...</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/math.js"></script>
+    <script type="text/javascript" src="~/Scripts/radar-reader.js"></script>
+}

@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html class="bg-dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+        <div class="container w-100">
+            @Html.ActionLink("NEXRAD Web Viewer", "", "", new { area = "" }, new { @class = "navbar-brand" })
+            <a class="navbar-brand" data-bs-toggle="offcanvas" href="#radar-selector" role="link" aria-controls="radar-selector">Change Radar View</a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    @RenderBody()
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/threejs")
+    @Scripts.Render("~/bundles/d3js")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

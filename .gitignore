@@ -32,3 +32,6 @@ nexrad\.api/bin/
 nexrad\.api/obj/
 
 *.user
+
+nexrad.web/bin/
+nexrad.web/obj/

@@ -1,0 +1,12 @@
+﻿.main-canvas-container {
+    width: 100%;
+}
+
+#main-canvas {
+    background-color: var(--bs-dark-bg);
+    border: 1px solid black; /*temp*/
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
