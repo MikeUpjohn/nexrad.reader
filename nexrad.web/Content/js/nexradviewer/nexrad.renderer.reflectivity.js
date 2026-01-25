@@ -1,89 +1,7 @@
-﻿window.addEventListener('DOMContentLoaded', function () {
-    nexrad.reader.init();
-    nexrad.ui.init();
-    nexrad.renderer.reflectivity.init();
-});
-
-const nexrad = {
-};
-
-nexrad.reader = {};
-nexrad.ui = {};
-nexrad.renderer = {};
-
-nexrad.reader = (function () {
-    let loadFileButton;
-
-    const selectors = {
-        radarFile: '#radar-file',
-        runRadarLoop: '#run-radar-loop'
-    };
-
-    const init = () => {
-        loadFileButton = document.querySelector(selectors.runRadarLoop);
-
-        setupLoadFileHandler();
-    };
-
-    const setupLoadFileHandler = () => {
-        const loadFileButton = document.querySelector(selectors.runRadarLoop);
-        if (!loadFileButton) {
-            return;
-        }
-
-        loadFileButton.removeEventListener('click', handleLoadFile);
-        loadFileButton.addEventListener('click', handleLoadFile);
-    };
-
-    const handleLoadFile = async () => {
-        loadFileButton.setAttribute('disabled', 'disabled');
-
-        const selectedMenuItem = document.querySelector(selectors.radarFile).value;
-        if (!selectedMenuItem) {
-            return;
-        }
-
-        message = `Retrieving and loading file data for ${selectedMenuItem}`;
-        nexrad.ui.updateToastMessage(message);
-
-        const request = {
-            'RadarFile': 'KTLX20130520_200356_V06',
-            'ElevationNumber': 3
-        };
-
-        // Always required to run
-        const azimuthData = await nexrad.renderer.azimuth.loadAzimuthData(request);
-
-        // this will change later to render something based off the dropdown list of options (reflectivity, velocity etc.)
-        const reflectivityData = await nexrad.renderer.reflectivity.loadReflectivityData(request);
-
-        nexrad.renderer.reflectivity.drawReflectivity(reflectivityData, azimuthData);
-
-        nexrad.ui.disableElement(loadFileButton);
-    };
-
-    return {
-        init,
-        loadFileButton
-    };
-})();
-
-nexrad.renderer.reflectivity = (function () {
+﻿nexrad.renderer.reflectivity = (function () {
     // Awful, but good enough for now!
     // Colour scale from -32.0 through to 94.5dbZ as array of mixed colours
     const reflectivityColourSet = [0x000000, 0x9C9C9C, 0x767676, 0xFFAAAA, 0xEE8C8C, 0xC97070, 0x00FB90, 0x00BB00, 0xFFFF70, 0xD0D060, 0xFF6060, 0xDA0000, 0xAE0000, 0x0000FF, 0xFFFFFF, 0xE700FF];
-
-    const init = () => {
-        scene = new THREE.Scene();
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight - 56);
-        cameraPosition = 100;
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-        document.body.append(renderer.domElement);
-
-        renderScene();
-    };
 
     const loadReflectivityData = async (request) => {
         const response = await fetch('/Nexrad/GetReflectivityData', {
@@ -178,76 +96,8 @@ nexrad.renderer.reflectivity = (function () {
         }
     };
 
-    const renderScene = () => {
-        requestAnimationFrame(renderScene);
-        camera.position.z = cameraPosition;
-        renderer.render(scene, camera);
-    };
-
     return {
-        init,
         loadReflectivityData,
         drawReflectivity
     }
-})();
-
-nexrad.renderer.azimuth = (function () {
-    const loadAzimuthData = async (request) => {
-        const response = await fetch('/Nexrad/GetAzimuthData', {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(request)
-        });
-
-        const data = await response.json();
-        message = `File scan completed and ${data.length} Azimuth data records were found`;
-        nexrad.ui.updateToastMessage(message);
-
-        return data;
-    };
-
-    return {
-        loadAzimuthData
-    };
-})();
-
-nexrad.ui = (function () {
-    let bootstrapToast;
-    let toast;
-
-    const selectors = {
-        toastBody: '.toast-body',
-        toastMessage: '#toast-message'
-    };
-
-    const init = () => {
-        toast = document.querySelector(selectors.toastMessage);
-        bootstrapToast = new bootstrap.Toast(toast);
-        message = '';
-    };
-
-    const updateToastMessage = message => {
-        if (!bootstrapToast) {
-            return;
-        }
-
-        bootstrapToast._element.querySelector(selectors.toastBody).innerText = message;
-        bootstrapToast.show();
-    };
-
-    const disableElement = element => {
-        if (!element) {
-            return;
-        }
-
-        element.setAttribute('disabled', 'disabled');
-    }
-
-    return {
-        init,
-        updateToastMessage,
-        disableElement
-    };
 })();

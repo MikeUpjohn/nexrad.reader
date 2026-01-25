@@ -25,14 +25,18 @@ namespace nexrad.web {
                 "~/Content/lib/d3js/js/d3.v7.min.js"));
 
             bundles.Add(new Bundle("~/bundles/js/nexrad-viewer").Include(
-                "~/Content/js/math-utilities.js",
-                "~/Content/js/nexrad-viewer.js"));
+                "~/Content/js/utilities/math.utilities.js",
+                "~/Content/js/nexradviewer/nexrad.js",
+                "~/Content/js/nexradviewer/nexrad.reader.js",
+                "~/Content/js/nexradviewer/nexrad.renderer.azimuth.js",
+                "~/Content/js/nexradviewer/nexrad.renderer.reflectivity.js",
+                "~/Content/js/nexradviewer/nexrad.ui.js"));
 
             bundles.Add(new StyleBundle("~/bundles/css").Include(
                 "~/Content/lib/bootstrap/css/bootstrap.css"));
 
             bundles.Add(new StyleBundle("~/bundles/css/nexrad-viewer").Include(
-                "~/Content/css/nexrad-viewer.css"));
+                "~/Content/css/nexrad.css"));
         }
     }
 }
