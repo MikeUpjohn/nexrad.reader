@@ -168,6 +168,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\js\nexradviewer\nexrad.js" />
+    <Content Include="Content\js\nexradviewer\nexrad.renderer.reflectivity.js" />
+    <Content Include="Content\js\nexradviewer\nexrad.ui.js" />
+    <Content Include="Content\js\nexradviewer\nexrad.renderer.azimuth.js" />
     <Content Include="Content\lib\bootstrap\css\bootstrap-grid.css" />
     <Content Include="Content\lib\bootstrap\css\bootstrap-grid.min.css" />
     <Content Include="Content\lib\bootstrap\css\bootstrap-grid.rtl.css" />
@@ -186,7 +190,7 @@
     <Content Include="Content\lib\bootstrap\css\bootstrap.rtl.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\css\nexrad-viewer.css" />
+    <Content Include="Content\css\nexrad.css" />
     <Content Include="Content\lib\bootstrap\js\bootstrap.bundle.js" />
     <Content Include="Content\lib\bootstrap\js\bootstrap.bundle.min.js" />
     <Content Include="Content\lib\bootstrap\js\bootstrap.esm.js" />
@@ -206,9 +210,9 @@
     <Content Include="Content\lib\jquery\js\jquery.validate.min.js" />
     <Content Include="Content\lib\jquery\js\jquery.validate.unobtrusive.js" />
     <Content Include="Content\lib\jquery\js\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Content\js\math-utilities.js" />
+    <Content Include="Content\js\utilities\math.utilities.js" />
     <Content Include="Content\lib\modernizr\js\modernizr-2.8.3.js" />
-    <Content Include="Content\js\nexrad-viewer.js" />
+    <Content Include="Content\js\nexradviewer\nexrad.reader.js" />
     <Content Include="Content\lib\three\js\three.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
