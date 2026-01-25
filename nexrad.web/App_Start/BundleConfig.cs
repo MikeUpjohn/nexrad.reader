@@ -27,7 +27,7 @@ namespace nexrad.web {
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/lib/bootstrap/css/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/css/site.css"));
         }
     }
 }

@@ -186,7 +186,7 @@
     <Content Include="Content\lib\bootstrap\css\bootstrap.rtl.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Content\css\Site.css" />
     <Content Include="Content\lib\bootstrap\js\bootstrap.bundle.js" />
     <Content Include="Content\lib\bootstrap\js\bootstrap.bundle.min.js" />
     <Content Include="Content\lib\bootstrap\js\bootstrap.esm.js" />
@@ -206,9 +206,9 @@
     <Content Include="Content\lib\jquery\js\jquery.validate.min.js" />
     <Content Include="Content\lib\jquery\js\jquery.validate.unobtrusive.js" />
     <Content Include="Content\lib\jquery\js\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\math.js" />
+    <Content Include="Content\js\math.js" />
     <Content Include="Content\lib\modernizr\js\modernizr-2.8.3.js" />
-    <Content Include="Scripts\radar-reader.js" />
+    <Content Include="Content\js\radar-reader.js" />
     <Content Include="Content\lib\three\js\three.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -226,6 +226,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\lib\bootstrap\css\bootstrap.rtl.min.css.map" />
