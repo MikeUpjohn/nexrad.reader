@@ -34,7 +34,7 @@
         nexrad.ui.updateToastMessage(message);
 
         const request = {
-            'RadarFile': 'KTLX20130520_200356_V06',
+            'RadarFile': selectedMenuItem,
             'ElevationNumber': 3
         };
 
