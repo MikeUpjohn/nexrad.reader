@@ -40,6 +40,14 @@
         element.setAttribute('disabled', 'disabled');
     }
 
+    const enableElement = element => {
+        if (!element) {
+            return;
+        }
+
+        element.removeAttribute('disabled');
+    };
+
     const renderScene = () => {
         requestAnimationFrame(renderScene);
         camera.position.z = cameraPosition;
@@ -49,6 +57,7 @@
     return {
         init,
         updateToastMessage,
-        disableElement
+        disableElement,
+        enableElement
     };
 })();

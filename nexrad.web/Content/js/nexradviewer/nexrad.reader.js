@@ -25,8 +25,12 @@
     const handleLoadFile = async () => {
         loadFileButton.setAttribute('disabled', 'disabled');
 
-        const selectedMenuItem = document.querySelector(selectors.radarFile).value;
+        const radarFileMenu = document.querySelector(selectors.radarFile);
+        const selectedMenuItem = radarFileMenu.value;
+
         if (!selectedMenuItem) {
+            radarFileMenu.classList.add('invalid');
+            nexrad.ui.enableElement(loadFileButton);
             return;
         }
 

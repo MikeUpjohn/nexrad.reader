@@ -10,3 +10,7 @@
     margin-right: auto;
     display: block;
 }
+
+.invalid {
+    box-shadow: 0 0 2px 2px red;
+}
