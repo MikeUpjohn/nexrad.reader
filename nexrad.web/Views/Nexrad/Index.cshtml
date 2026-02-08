@@ -12,12 +12,21 @@
             <div class="col-lg-12">
                 <label for="radar-file">Select Radar File:</label>
                 <select class="form-control" id="radar-file">
-                    <option>Please Select</option>
+                    <option value="">Please Select</option>
                     <option value="KTLX20130520_200356_V06">KTLX 20.05.2013 2003z (Moore EF5 Tornado)</option>
                     <option value="KTLX20130520_200811_V06">KBMX 25.01.2026 0500z (Moore EF5 Tornado 2)</option>
                 </select>
             </div>
+        </div>
+        <div class="row p-2 justify-content-lg-center">
+            <div class="col-lg-12">
+                <label for="radar-data-type">Select Data Type:</label>
+                <select class="form-control" id="radar-data-type" disabled="disabled">
+                    <option>Please Select</option>
+                    <option value="REF" selected="selected">Reflectivity</option>
+                </select>
             </div>
+        </div>
         <div class="row p-2 justify-content-lg-center">
             <div class="col-lg-12">
                 <button id="run-radar-loop" class="btn btn-light d-flex justify-content-center w-100">Run!</button>
