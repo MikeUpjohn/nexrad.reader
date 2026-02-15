@@ -1,5 +1,7 @@
 ﻿nexrad.reader = (function () {
     let loadFileButton;
+    let azmiuthData;
+    let request;
 
     const selectors = {
         radarFile: '#radar-file',
@@ -13,18 +15,20 @@
     };
 
     const setupLoadFileHandler = () => {
+        const radarFileDropdown = document.querySelector(selectors.radarFile);
         const loadFileButton = document.querySelector(selectors.runRadarLoop);
-        if (!loadFileButton) {
+        if (!radarFileDropdown || !loadFileButton) {
             return;
         }
+
+        radarFileDropdown.removeEventListener('click', handleRadarFileChange);
+        radarFileDropdown.addEventListener('click', handleRadarFileChange);
 
         loadFileButton.removeEventListener('click', handleLoadFile);
         loadFileButton.addEventListener('click', handleLoadFile);
     };
 
-    const handleLoadFile = async () => {
-        loadFileButton.setAttribute('disabled', 'disabled');
-
+    const handleRadarFileChange = async () => {
         const radarFileMenu = document.querySelector(selectors.radarFile);
         const selectedMenuItem = radarFileMenu.value;
 
@@ -37,18 +41,25 @@
         message = `Retrieving and loading file data for ${selectedMenuItem}`;
         nexrad.ui.updateToastMessage(message);
 
-        const request = {
+        request = {
             'RadarFile': selectedMenuItem,
-            'ElevationNumber': 3
         };
 
         // Always required to run
-        const azimuthData = await nexrad.renderer.azimuth.loadAzimuthData(request);
+        azimuthData = await nexrad.renderer.azimuth.loadAzimuthData(request);
+    };
+
+    const handleLoadFile = async () => {
+        nexrad.ui.disableElement(loadFileButton);
+
+        const elevationScan = document.querySelector('#elevation-scan');
+
+        request.ElevationNumber = elevationScan.value;
 
         // this will change later to render something based off the dropdown list of options (reflectivity, velocity etc.)
         const reflectivityData = await nexrad.renderer.reflectivity.loadReflectivityData(request);
 
-        nexrad.renderer.reflectivity.drawReflectivity(reflectivityData, azimuthData);
+        nexrad.renderer.reflectivity.drawReflectivity(reflectivityData, azimuthData.AzimuthData[request.ElevationNumber]);
 
         nexrad.ui.disableElement(loadFileButton);
     };
