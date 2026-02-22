@@ -48,6 +48,35 @@
         element.removeAttribute('disabled');
     };
 
+    const createElevationDropdown = availableElevations => {
+        const label = createElevationDropdownLabel();
+
+        const select = document.createElement('select');
+        select.classList.add('form-control');
+        select.id = 'elevation-scan';
+
+        for (const availableElevation of availableElevations) {
+            const option = document.createElement('option');
+            option.value = availableElevation;
+            option.text = `Elevation Scan ${availableElevation}`;
+
+            select.appendChild(option);
+        }
+
+        return {
+            label,
+            select
+        };
+    };
+
+    const createElevationDropdownLabel = () => {
+        const label = document.createElement('label');
+        label.dataset.for = 'elevation-scan';
+        label.textContent = 'Select Elevation Level:';
+
+        return label;
+    };
+
     const renderScene = () => {
         requestAnimationFrame(renderScene);
         camera.position.z = cameraPosition;
@@ -58,6 +87,7 @@
         init,
         updateToastMessage,
         disableElement,
-        enableElement
+        enableElement,
+        createElevationDropdown
     };
 })();
