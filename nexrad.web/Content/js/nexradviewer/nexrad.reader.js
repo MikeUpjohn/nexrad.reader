@@ -21,8 +21,8 @@
             return;
         }
 
-        radarFileDropdown.removeEventListener('click', handleRadarFileChange);
-        radarFileDropdown.addEventListener('click', handleRadarFileChange);
+        radarFileDropdown.removeEventListener('change', handleRadarFileChange);
+        radarFileDropdown.addEventListener('change', handleRadarFileChange);
 
         loadFileButton.removeEventListener('click', handleLoadFile);
         loadFileButton.addEventListener('click', handleLoadFile);
